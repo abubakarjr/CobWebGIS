@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Cobweb GIS</title>
+    <link rel="stylesheet" href="/pages/map.css" />
+    <link rel="stylesheet" href="/style.css" />
+    <link
+      rel="shortcut icon"
+      href="/resources/images/cobweb-svgrepo-com (1).svg"
+    />
+    <link rel="stylesheet" href="/resources/v6.8.0-dist/ol.css" />
+    <link
+      rel="stylesheet"
+      href="/resources/layerswitcher/ol-layerswitcher.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <!-- Header -->
+      <header class="header">
+        <nav class="nav">
+          <i class="uil uil-bars navOpenBtn"></i>
+          <a href="/index.html">
+            <img
+              class="img-logo"
+              src="/resources/images/cobweb-svgrepo-com (3).png"
+              alt="Hompage"
+            />
+          </a>
+          <!-- <a href="/layout/home.html" class="logo">CobWeb GIS</a> -->
+          <ul class="nav-links">
+            <i class="uil uil-times navCloseBtn"></i>
+            <li><a href="/pages/map.js">Map</a></li>
+            <li><a href="/pages/about.html">About</a></li>
+            <li><a href="/pages/contact.html">Contact</a></li>
+          </ul>
+          <button class="button" id="form-open">Account</button>
+        </nav>
+      </header>
+
+      <!-- Main Page -->
+      <main class="main map">
+        <div id="map" class="map">
+          <button id="btnCrosshair" title="Live Location">
+            <i class="fa fa-crosshairs fa-2x"></i>
+          </button>
+
+          <!-- <div class="search-container">
+                        <input type="text" id="locationInput" placeholder="Search location and press Enter">
+                    </div>  -->
+
+          <!-- Layer Switcher -->
+          <div id="layersDiv" class="layersDiv">
+            <div class="headerDiv" id="headerDiv">
+              <!-- <label for="">Layers</label> -->
+            </div>
+            <div id="layerSwitcherContent" class="layer-switcher"></div>
+          </div>
+
+          <!-- Location search -->
+          <div>
+            <label class="search" for="inpt_search">
+              <input id="inpt_search" type="text" />
+              <div id="suggestions-container"></div>
+            </label>
+          </div>
+        </div>
+
+        <!-- <div id="popup" class="ol-popup">
+                    <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+                    <div id="popup-content"></div>
+                </div> -->
+      </main>
+      <!-- Main Page -->
+
+      <!-- Aside 1 -->
+      <aside class="aside aside1">
+        <div class="coodctn">
+          <h1>Coordinates Calc</h1>
+
+          <div id="coordinates">
+            <!-- <label for="coordinateInput">Coordinates Calc</label> -->
+            <textarea
+              id="coordinateInput"
+              rows="5"
+              placeholder="Latitude1, Longitude1&#10;Latitude2, Longitude2&#10;Latitude3, Longitude3"
+            ></textarea>
+            <button class="coodbtn" onclick="calculateArea()">Area</button>
+
+            <!-- REDO AND UNDU -->
+            <!-- <button id="undoButton" class="coodbtn">Undo</button>
+            <button id="redoButton" class="coodbtn">Redo</button> -->
+            <!-- <p id="result1"></p> -->
+          </div>
+          <!-- AUTO CONVERTER -->
+          <label for="area">Converter</label>
+          <div class="input-container">
+            <input type="number" id="area" placeholder="Enter area (sqm)" />
+          </div>
+          <br />
+          <!-- <label for="dense">Plot Density Table</label> -->
+          <select id="dense">
+            <option value="hidens">Selece Plot Density</option>
+            <option value="hidens">High Density Area</option>
+            <option value="medens">Medium Density Area</option>
+            <option value="lodens">Low Density Area</option>
+          </select>
+        </div>
+      </aside>
+
+      <!-- Aside 2 -->
+      <aside class="aside aside2">
+        <div id="conversion-form">
+          <h1 class="survres">Result</h1>
+          <div id="measurementResults">
+            <p id="lengthResult"></p>
+            <p id="areaResult"></p>
+          </div>
+
+          <!-- <br />
+          <label for="area">Converter</label>
+          <div class="input-container">
+            <input type="number" id="area" placeholder="Enter area (sqm)" />
+          </div>
+
+          <br />
+
+          <label for="dense">Plot Density Table</label>
+          <select id="dense">
+            <option value="hidens">Selece Plot Density</option>
+            <option value="hidens">High Density Area</option>
+            <option value="medens">Medium Density Area</option>
+            <option value="lodens">Low Density Area</option>
+          </select> -->
+
+          <div id="result"></div>
+          <p id="result1"></p>
+        </div>
+      </aside>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <p>© CobWeb GIS 2023 info@cobwebgis.com +234 8038 098 851</p>
+      </footer>
+    </div>
+  </body>
+
+  <!-- JavaScript -->
+  <script src="https://cdn.rawgit.com/Viglino/ol-ext/master/dist/ol-ext.js"></script>
+  <script src="/resources/jQuery/jquery-3.6.0.min.js"></script>
+  <script src="/resources/v6.8.0-dist/ol.js"></script>
+  <script src="/resources/layerswitcher/ol-layerswitcher.js"></script>
+  <script src="/resources/fontawsome/js/all.js"></script>
+  <script src="/script.js"></script>
+  <script src="/pages/map.js"></script>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>CobWeb GIS - Contact Us</title>
+    <link
+      rel="shortcut icon "
+      href="/resources/images/cobweb-svgrepo-com (1).svg"
+    />
+    <link rel="stylesheet" href="/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <!-- Header -->
+      <header class="header">
+        <nav class="nav">
+          <i class="uil uil-bars navOpenBtn"></i>
+          <a href="/index.html">
+            <img
+              class="img-logo"
+              src="/resources/images/cobweb-svgrepo-com (3).png"
+              alt="Hompage"
+            />
+          </a>
+          <!-- <a href="/layout/home.html" class="logo">CobWeb GIS</a> -->
+          <ul class="nav-links">
+            <i class="uil uil-times navCloseBtn"></i>
+            <li><a href="/pages/map.html">Map</a></li>
+            <li><a href="/pages/about.html">About</a></li>
+            <li><a href="/pages/contact.html">Contact</a></li>
+          </ul>
+          <button class="button" id="form-open">Account</button>
+        </nav>
+      </header>
+
+      <!-- Main Page -->
+      <main class="main">
+        <!-- Contact Us Section -->
+        <section class="contact-section">
+          <!-- Contact Information -->
+          <div class="contact-info">
+            <h2>Contact Us</h2>
+            <div class="contact-info-details">
+              <p>
+                Have questions or need assistance with CobWeb GIS? We're here to
+                help!
+              </p>
+              <p>Email: info@cobwebgis.com</p>
+              <p>Phone: +1 234 567 890</p>
+            </div>
+          </div>
+
+          <!-- Contact Form -->
+          <div class="contact-form">
+            <h2>Contact Form</h2>
+            <form action="#" method="post">
+              <label for="name">Name:</label>
+              <input type="text" id="name" name="name" required />
+
+              <label for="email">Email:</label>
+              <input type="email" id="email" name="email" required />
+
+              <label for="message">Message:</label>
+              <textarea
+                id="message"
+                name="message"
+                rows="4"
+                required
+              ></textarea>
+
+              <button type="submit">Submit</button>
+            </form>
+          </div>
+        </section>
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <p>©CobWeb GIS 2023 info@cobwebgis.com</p>
+      </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="/script.js"></script>
+  </body>
+</html>
