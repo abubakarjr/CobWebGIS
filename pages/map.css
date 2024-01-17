@@ -4,14 +4,13 @@
   height: 100%;
 }
 
-
 /* MAIN CONTROL */
 .ol-print-to-scale {
   position: absolute;
   z-index: 5000;
   background-color: transparent;
   /* background: linear-gradient(to bottom, #175d69 23%, #330c43 95%); */
-  border: 0px #ccc;
+  border: 2px #ccc;
   padding: 5px;
   cursor: pointer;
   right: 1%;

@@ -130,11 +130,10 @@
   /* HERO SECTION */
   .hero-section {
     display: flex;
-    /* align-items: center; */
     height: 100%;
     padding: 0 15px;
     margin: 0 auto;
-    background-image: url('/resources/images/IMG/bg6.jpg');
+    background-image: url('/resources/images/IMG/bg14.jpg');
     background-size: cover;
     background-position: center;
     background-position: 100%;
@@ -149,6 +148,7 @@
     font-size: 34px;
     padding: 10px;
     margin-bottom: 20px;
+    text-align: center;
   }
   
   .hero p {
@@ -414,20 +414,22 @@
   /* Add any specific styles for the About Us page here */
   .about-section {
     /* background-color: #f4f4f4; */
+    display: flex;
+    height: 100%;
+    padding: 0 15px;
+    margin: 0 auto;
     background-image: url('/resources/images/IMG/bg13.jpg');
     background-size: contain;
     background-position: center;
     background-position: 100%;
-    padding: 20px;
   }
   
   .about-section .content {
-    /* max-width: 800px; */
     margin: 0 auto;
   }
   
   .about-section h2 {
-    font-size: 36px;
+    font-size: 40px;
     color: #fff;
     text-align: center;
     margin-bottom: 20px;
@@ -435,7 +437,7 @@
   
   .about-section p {
     
-    font-size: 18px;
+    font-size: 22px;
     color: #fff;
     line-height: 1.6;
     margin-bottom: 15px;
@@ -449,7 +451,7 @@
     flex-wrap: wrap;
     justify-content: space-between;
     padding: 20px;
-    background-image: url('/resources/images/IMG/bg6.jpg');
+    background-image: url('/resources/images/IMG/bg7.jpg');
     background-size: cover;
     background-position:center;
     background-position: 50%;
