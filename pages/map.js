@@ -97,21 +97,6 @@ var mapboxTile = new ol.layer.Tile({
   }),
 });
 
-// Mapbox Satellite with Labels layer
-var mapboxAccessToken =
-  "pk.eyJ1IjoiYWJ1YmFrYXJ0YW5rbzk5IiwiYSI6ImNra3dyNXc5aTBuYTUybm80bHpxNXM5NDMifQ.CTLplUINQxXlKFLh_ow2sg";
-var mapboxSatelliteWithLabelsLayer = new ol.layer.Tile({
-  title: "Mapbox Satellite",
-  type: "base",
-  visible: false, // Set to true if you want it to be initially visible
-  attributions: "© Mapbox",
-  source: new ol.source.XYZ({
-    url:
-      "https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/{z}/{x}/{y}?access_token=" +
-      mapboxAccessToken,
-  }),
-});
-
 // Google Maps layer
 var googleMapsApiKey = "AIzaSyBBe7xyfVIq6EmKffOupLL50mniuvRyT1A";
 
@@ -142,12 +127,11 @@ var baseGroup = new ol.layer.Group({
   fold: true,
   layers: [
     osmTile,
-    bingSatellite,
     mapboxTile,
     bingStreetsWithLabels,
+    bingSatellite,
     googleMapsLayer,
     googleHybridLayer,
-    mapboxSatelliteWithLabelsLayer,
   ],
 });
 map.addLayer(baseGroup);
@@ -157,6 +141,7 @@ var bingApiKey =
   "AstqSWN2XWpS7yTd1GQ6mSp6ADE-IFOaLveo30y7PhE2iz7CDA8nvsvO-3YsEeXF";
 var mapboxApiKey =
   "pk.eyJ1IjoiYWJ1YmFrYXJ0YW5rbzk5IiwiYSI6ImNra3dyNXc5aTBuYTUybm80bHpxNXM5NDMifQ.CTLplUINQxXlKFLh_ow2sg";
+var googleApiKey = "YOUR_GOOGLE_API_KEY"; // Replace with your Google API key
 var locationInput = document.getElementById("inpt_search");
 var suggestionsContainer = document.getElementById("suggestions-container");
 
@@ -170,9 +155,13 @@ locationInput.addEventListener("input", function () {
     Promise.all([
       getBingLocationsSuggestions(locationInputValue),
       getMapboxLocationsSuggestions(locationInputValue),
+      getGoogleLocationsSuggestions(locationInputValue),
     ])
-      .then(([bingSuggestions, mapboxSuggestions]) => {
-        var allSuggestions = bingSuggestions.concat(mapboxSuggestions);
+      .then(([bingSuggestions, mapboxSuggestions, googleSuggestions]) => {
+        var allSuggestions = bingSuggestions.concat(
+          mapboxSuggestions,
+          googleSuggestions
+        );
 
         if (allSuggestions.length > 0) {
           // Display up to 3 suggestions
@@ -249,14 +238,40 @@ function getMapboxLocationsSuggestions(query) {
     });
 }
 
+function getGoogleLocationsSuggestions(query) {
+  var apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(
+    query
+  )}&key=${googleApiKey}`;
+
+  return fetch(apiUrl)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data && data.predictions && data.predictions.length > 0) {
+        return data.predictions.map((prediction) => ({
+          name: prediction.description,
+          placeId: prediction.place_id,
+        }));
+      } else {
+        return [];
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching Google location suggestions:", error);
+      return [];
+    });
+}
+
 function handleSuggestionClick(suggestion) {
-  var coordinates = [
-    suggestion.point.coordinates[1],
-    suggestion.point.coordinates[0],
-  ];
+  var coordinates;
+  if (suggestion.point) {
+    coordinates = [
+      suggestion.point.coordinates[1],
+      suggestion.point.coordinates[0],
+    ];
+  }
 
   // Assuming `map` is a global variable and it has a method to set the view
-  if (map) {
+  if (map && coordinates) {
     map.getView().animate({
       center: ol.proj.fromLonLat(coordinates),
       zoom: 12,
@@ -360,9 +375,6 @@ zoButton.addEventListener("click", () => {
   }
 });
 
-//-----------
-
-//------------
 // POINT MARKER--------------------------------------------------
 var pointMarkerFlag = false;
 var pointMarkerButton = document.createElement("button");
@@ -464,11 +476,7 @@ map.on("click", function (event) {
   }
 });
 
-// // Example usage of undo and redo buttons
-// document.getElementById("undoButton").addEventListener("click", undo);
-// document.getElementById("redoButton").addEventListener("click", redo);
-
-// UNDO
+// UNDO BUTTON
 var undoButton = document.createElement("button");
 undoButton.innerHTML =
   '<img src="/resources/images/undo.svg" alt="" class="myImg" />';
@@ -482,7 +490,7 @@ toolbarDivElement.appendChild(undoElement);
 
 undoButton.addEventListener("click", undo);
 
-// REDO
+// REDO BUTTON
 var redoButton = document.createElement("button");
 redoButton.innerHTML =
   '<img src="/resources/images/redo.svg" alt="" class="myImg" />';
