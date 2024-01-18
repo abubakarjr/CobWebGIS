@@ -9,12 +9,13 @@
   position: absolute;
   z-index: 5000;
   background-color: transparent;
-  /* background: linear-gradient(to bottom, #175d69 23%, #330c43 95%); */
-  border: 2px #ccc;
-  padding: 5px;
+  background: linear-gradient(to bottom, #175d69 23%, #330c43 95%);
+  border: solid 5px #330c43;
   cursor: pointer;
   right: 1%;
-  top: 2%;
+  top: 1%;
+  width: 23px;
+  height: 23px;
 }
 
 .ol-print-to-scale, .custom-fullscreen-control:hover {
@@ -28,7 +29,11 @@
   padding: 5px;
   cursor: pointer;
   right: 1%;
-  top: 35%;
+  top: 63%;
+  bottom: auto;
+  left: auto;
+  position: absolute;
+  z-index: 5000;
 }
 
 .zoom-to-extent{
@@ -38,7 +43,7 @@
   padding: 5px;
   cursor: pointer;
   right: 1%;
-  top: 42%;
+  top: 69%;
 }
 
 .zoom{
@@ -363,8 +368,8 @@
   /* border-radius: 5px; */
   width: 35px;
   height: 35px;
-  right: 8px;
-  bottom: 3%;
+  right: 5px;
+  bottom: 8%;
   border: none;
 }
 
