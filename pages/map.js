@@ -969,7 +969,7 @@ function startAutolocate() {
     coordinates ? new ol.geom.Point(coordinates) : null
   );
   mapView.setCenter(coordinates);
-  mapView.setZoom(20git);
+  mapView.setZoom(20);
   accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
   intervalAutolocate = setInterval(function () {
     var coordinates = geolocation.getPosition();
