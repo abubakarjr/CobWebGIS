@@ -110,9 +110,8 @@
   }
 
   .aside:not(.hidden) {
-    display: block;
-  }
-
+  display: block;
+}
   .edge-panel-toggle {
     background-color: #3498db;
     color: #fff;

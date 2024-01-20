@@ -47,7 +47,6 @@ loginBtn.addEventListener("click", (e) => {
 });
 //SIGN UP/SIGN IN FORM//
 
-// Inside your script.js or map.js
 function toggleEdgePanels() {
   var aside1 = document.querySelector(".aside1");
   var aside2 = document.querySelector(".aside2");
@@ -55,6 +54,11 @@ function toggleEdgePanels() {
   // Toggle the "hidden" class to show/hide the edge panels
   aside1.classList.toggle("hidden");
   aside2.classList.toggle("hidden");
+
+  // Trigger map resize after toggling
+  setTimeout(function () {
+    map.updateSize();
+  }, 300); // Adjust the timeout as needed
 }
 
 // // Check if the user is authenticated (has signed up or logged in)
