@@ -47,6 +47,16 @@ loginBtn.addEventListener("click", (e) => {
 });
 //SIGN UP/SIGN IN FORM//
 
+// Inside your script.js or map.js
+function toggleEdgePanels() {
+  var aside1 = document.querySelector(".aside1");
+  var aside2 = document.querySelector(".aside2");
+
+  // Toggle the "hidden" class to show/hide the edge panels
+  aside1.classList.toggle("hidden");
+  aside2.classList.toggle("hidden");
+}
+
 // // Check if the user is authenticated (has signed up or logged in)
 // function isAuthenticated() {
 //   // Check if the user is signed up or logged in (you can modify this logic based on your authentication mechanism)

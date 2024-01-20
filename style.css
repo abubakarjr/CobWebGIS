@@ -106,6 +106,23 @@
     margin: 1px;
     height: 77vh;
     border: solid 3px #201344;
+    display: none;
+  }
+
+  .aside:not(.hidden) {
+    display: block;
+  }
+
+  .edge-panel-toggle {
+    background-color: #3498db;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .edge-panel-toggle:hover {
+    background-color: #2980b9;
   }
   
   /* Footer styles */

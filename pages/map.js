@@ -286,12 +286,98 @@ function handleSuggestionClick(suggestion) {
     coordinates
   );
 }
+//LIVE LOCATION
+var intervalAutolocate;
+var posCurrent;
 
-//TOOLBAR
+var geolocation = new ol.Geolocation({
+  trackingOptions: {
+    enableHighAccuracy: true,
+  },
+  tracking: true,
+  projection: mapView.getProjection(),
+});
+
+var positionFeature = new ol.Feature();
+positionFeature.setStyle(
+  new ol.style.Style({
+    image: new ol.style.Circle({
+      radius: 6,
+      fill: new ol.style.Fill({
+        color: "#3399CC",
+      }),
+      stroke: new ol.style.Stroke({
+        color: "#fff",
+        width: 2,
+      }),
+    }),
+  })
+);
+var accuracyFeature = new ol.Feature();
+
+var currentPositionLayer = new ol.layer.Vector({
+  map: map,
+  source: new ol.source.Vector({
+    features: [accuracyFeature, positionFeature],
+  }),
+});
+
+function startAutolocate() {
+  var coordinates = geolocation.getPosition();
+  positionFeature.setGeometry(
+    coordinates ? new ol.geom.Point(coordinates) : null
+  );
+  mapView.setCenter(coordinates);
+  mapView.setZoom(20);
+  accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
+  intervalAutolocate = setInterval(function () {
+    var coordinates = geolocation.getPosition();
+    var accuracy = geolocation.getAccuracyGeometry();
+    positionFeature.setGeometry(
+      coordinates ? new ol.geom.Point(coordinates) : null
+    );
+    map.getView().setCenter(coordinates);
+    mapView.setZoom(16);
+    accuracyFeature.setGeometry(accuracy);
+  }, 10000);
+}
+
+function stopAutolocate() {
+  clearInterval(intervalAutolocate);
+  positionFeature.setGeometry(null);
+  accuracyFeature.setGeometry(null);
+}
+//LIVE LOCATION
+
+// ONLOAD FUNCTIONS
+$(function () {
+  var toc = document.getElementById("layerSwitcherContent");
+  layerSwitcherControl = new ol.control.LayerSwitcher.renderPanel(map, toc, {
+    reverse: false,
+  });
+
+  $("#btnCrosshair").on("click", function (event) {
+    $("#btnCrosshair").toggleClass("clicked");
+    if ($("#btnCrosshair").hasClass("clicked")) {
+      startAutolocate();
+    } else {
+      stopAutolocate();
+    }
+  });
+});
+// ONLOAD FUNCTIONS
+
+//TOOLBAR TOOLBAR CONTROLS
 var toolbarDivElement = document.createElement("div");
 toolbarDivElement.className = "toolbarDiv";
 
-// HOME
+//ADDING ALL TOOLBAR CONTROLS
+var allControl = new ol.control.Control({
+  element: toolbarDivElement,
+});
+map.addControl(allControl);
+
+// HOME TOOLBAR
 var homeButton = document.createElement("button");
 homeButton.innerHTML =
   '<img src="/resources/images/home.svg" alt="" class="myImg" />';
@@ -307,7 +393,7 @@ homeButton.addEventListener("click", () => {
   location.href = "pages/map.html"; // Adjust the path based on your file structure
 });
 
-//ZOOM-IN
+//ZOOM-IN TOOLBAR
 var zoomInInteraction = new ol.interaction.DragBox();
 
 zoomInInteraction.on("boxend", function () {
@@ -340,7 +426,7 @@ ziButton.addEventListener("click", () => {
   }
 });
 
-// ZOOM-OUT
+// ZOOM-OUT TOOLBAR
 var zoomOutInteraction = new ol.interaction.DragBox();
 
 zoomOutInteraction.on("boxend", function () {
@@ -375,7 +461,7 @@ zoButton.addEventListener("click", () => {
   }
 });
 
-// POINT MARKER--------------------------------------------------
+// POINT MARKER TOOLBAR
 var pointMarkerFlag = false;
 var pointMarkerButton = document.createElement("button");
 pointMarkerButton.innerHTML =
@@ -504,7 +590,6 @@ toolbarDivElement.appendChild(redoElement);
 
 redoButton.addEventListener("click", redo);
 
-//-------------------------------------------------
 // DISTANCE AND AREA MEASURE
 var lengthButton = document.createElement("button");
 lengthButton.innerHTML =
@@ -605,7 +690,6 @@ var vector = new ol.layer.Vector({
 
 map.addLayer(vector);
 
-// DRAWING STYLE
 var interactionStyle = new ol.style.Style({
   fill: new ol.style.Fill({
     color: "rgba(200, 200, 200, 0.6)",
@@ -926,94 +1010,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //------------------------------------------
 // end : Length and Area Measurement Control
-
-//LIVE LOCATION
-var intervalAutolocate;
-var posCurrent;
-
-var geolocation = new ol.Geolocation({
-  trackingOptions: {
-    enableHighAccuracy: true,
-  },
-  tracking: true,
-  projection: mapView.getProjection(),
-});
-
-var positionFeature = new ol.Feature();
-positionFeature.setStyle(
-  new ol.style.Style({
-    image: new ol.style.Circle({
-      radius: 6,
-      fill: new ol.style.Fill({
-        color: "#3399CC",
-      }),
-      stroke: new ol.style.Stroke({
-        color: "#fff",
-        width: 2,
-      }),
-    }),
-  })
-);
-var accuracyFeature = new ol.Feature();
-
-var currentPositionLayer = new ol.layer.Vector({
-  map: map,
-  source: new ol.source.Vector({
-    features: [accuracyFeature, positionFeature],
-  }),
-});
-
-function startAutolocate() {
-  var coordinates = geolocation.getPosition();
-  positionFeature.setGeometry(
-    coordinates ? new ol.geom.Point(coordinates) : null
-  );
-  mapView.setCenter(coordinates);
-  mapView.setZoom(20);
-  accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
-  intervalAutolocate = setInterval(function () {
-    var coordinates = geolocation.getPosition();
-    var accuracy = geolocation.getAccuracyGeometry();
-    positionFeature.setGeometry(
-      coordinates ? new ol.geom.Point(coordinates) : null
-    );
-    map.getView().setCenter(coordinates);
-    mapView.setZoom(16);
-    accuracyFeature.setGeometry(accuracy);
-  }, 10000);
-}
-
-function stopAutolocate() {
-  clearInterval(intervalAutolocate);
-  positionFeature.setGeometry(null);
-  accuracyFeature.setGeometry(null);
-}
-//LIVE LOCATION
-
-// ONLOAD FUNCTIONS
-$(function () {
-  var toc = document.getElementById("layerSwitcherContent");
-  layerSwitcherControl = new ol.control.LayerSwitcher.renderPanel(map, toc, {
-    reverse: false,
-  });
-
-  $("#btnCrosshair").on("click", function (event) {
-    $("#btnCrosshair").toggleClass("clicked");
-    if ($("#btnCrosshair").hasClass("clicked")) {
-      startAutolocate();
-    } else {
-      stopAutolocate();
-    }
-  });
-});
-// ONLOAD FUNCTIONS
-
-//ADDING ALL CONTROLS
-var allControl = new ol.control.Control({
-  element: toolbarDivElement,
-});
-map.addControl(allControl);
-//ADDING ALL CONTROLS
 
 //COORDINATE CALCULATOR------------------//
 function calculateArea() {
