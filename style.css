@@ -33,6 +33,7 @@
     position: relative;
     padding: 0;
     margin: 1px;
+    width: fit-content;
   }
   
   /* Navigation styles */
@@ -91,6 +92,21 @@
     display: none;
   }
   
+  *::-webkit-scrollbar {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  *::-webkit-scrollbar {
+   scrollbar-width: none;
+  }
+
+  .scrollable-container {
+    height: 77vh; 
+    overflow: auto; 
+  }
+
+
   .main {
     text-align: justify;
     height: 77vh;
@@ -112,7 +128,7 @@
   .aside.hidden {
     display: none;
   }
-  
+
   .aside:not(.hidden) {
   display: block;
 }
@@ -155,17 +171,16 @@
   
   .hero h3 {
     font-size: 34px;
-    padding: 10px;
-    margin-bottom: 20px;
+    padding: 5px;
+    margin: 5px;
     text-align: center;
   }
   
   .hero p {
     text-align: justify;
     font-size: 30px;
-    margin-bottom: 20px;
+    margin: 10px;
     padding: 10px;
-    /* color: #c9c7c7; */
   }
   
   .hero-section .buttons {
