@@ -46,9 +46,9 @@
             <li><a href="/pages/contact.html">Contact</a></li>
           </ul>
           <!-- Inside the header section -->
-          <button class="edge-panel-toggle button" onclick="toggleEdgePanels()">
+          <!-- <button class="edge-panel-toggle button" onclick="toggleEdgePanels()">
             Toggle Panels
-          </button>
+          </button> -->
 
           <button class="button" id="form-open">Account</button>
         </nav>
@@ -61,15 +61,9 @@
             <i class="fa fa-crosshairs fa-2x"></i>
           </button>
 
-          <!-- <div class="search-container">
-                        <input type="text" id="locationInput" placeholder="Search location and press Enter">
-                    </div>  -->
-
           <!-- Layer Switcher -->
           <div id="layersDiv" class="layersDiv">
-            <div class="headerDiv" id="headerDiv">
-              <!-- <label for="">Layers</label> -->
-            </div>
+            <div class="headerDiv" id="headerDiv"></div>
             <div id="layerSwitcherContent" class="layer-switcher"></div>
           </div>
 
@@ -79,6 +73,66 @@
               <input id="inpt_search" type="text" />
               <div id="suggestions-container"></div>
             </label>
+          </div>
+
+          <!-- Measurement Controls -->
+          <div id="measurement-controls" class="measurement-controls">
+            <div id="type">
+              <button
+                title="Distance Measure"
+                type="button"
+                id="lengthBtn"
+                data-type="LineString"
+              >
+                <img src="/resources/images/length.svg" alt="" />
+              </button>
+              <button
+                title="Area Measure"
+                type="button"
+                id="areaBtn"
+                data-type="Polygon"
+              >
+                <img src="/resources/images/area.svg" alt="" />
+              </button>
+              <button
+                title="Add Marker"
+                type="button"
+                id="pointBtn"
+                data-type="Point"
+              >
+                <img src="/resources/images/marker.svg" alt="" />
+              </button>
+              <button
+                title="Radius Measure"
+                type="button"
+                id="circleBtn"
+                data-type="Circle"
+              >
+                <img src="/resources/images/radius.svg" alt="" />
+              </button>
+              <button title="Modification" type="button" id="modifyBtn">
+                <img src="/resources/images/modify.svg" alt="" />
+              </button>
+              <button title="Clear Measurement" type="button" id="clearBtn">
+                <img src="/resources/images/clear1.svg" alt="" />
+              </button>
+              <button title="Undo" type="button" id="undoBtn">
+                <img src="/resources/images/undo.svg" alt="" />
+              </button>
+              <button title="Redo" type="button" id="redoBtn">
+                <img src="/resources/images/redo.svg" alt="" />
+              </button>
+              <button
+                title="Edge Panels"
+                class="edge-panel-toggle"
+                onclick="toggleEdgePanels()"
+              >
+                <img
+                  src="/resources/images/split-three-svgrepo-com.svg"
+                  alt=""
+                />
+              </button>
+            </div>
           </div>
         </div>
 

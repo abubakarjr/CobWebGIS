@@ -10,13 +10,22 @@
   z-index: 5000;
   background-color: transparent;
   background: linear-gradient(to bottom, #175d69 23%, #330c43 95%);
-  border: solid 5px #330c43;
   cursor: pointer;
   right: 1%;
   top: 1%;
-  width: 23px;
-  height: 23px;
+  border-radius: 2px; 
+  font-weight: 700;
+  text-align: center;
+  border: none;
+  display: flex;
+  height: 25px; 
+  width: 25px; 
+  margin: 5px;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
 }
+
 
 .ol-print-to-scale, .custom-fullscreen-control:hover {
   background-color: #f0f0f0;
@@ -28,25 +37,26 @@
   border: 1px #ccc;
   padding: 5px;
   cursor: pointer;
-  right: 1%;
-  top: 63%;
+  right: 8px;
+  top: 60%;
   bottom: auto;
   left: auto;
   position: absolute;
   z-index: 5000;
 }
 
+
 .zoom-to-extent{
   background-color: #fff;
+  position: fixed;
   background: linear-gradient(to bottom, #175d69 23%, #330c43 95%);
-  border: 1px #ccc;
   padding: 5px;
   cursor: pointer;
-  right: 1%;
-  top: 69%;
+  right: 8px;
+  top: 54%;
 }
 
-.zoom{
+/* .zoom{
   background-color: #fff;
   background: linear-gradient(to bottom, #175d69 23%, #330c43 95%);
   border: 1px #ccc;
@@ -54,7 +64,7 @@
   cursor: pointer;
   right: 1%;
   top: 75%;
-}
+} */
 
 .mousePosition {
   position: absolute;
@@ -69,6 +79,56 @@
   background-color: rgba(225, 225, 225, 0.6);
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   font-size: large;
+}
+
+.edge-panel-toggle {
+  background-color: #3498db;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.edge-panel-toggle:hover {
+  background-color: #2980b9;
+}
+
+#measurement-controls {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  z-index: 10000;
+}
+
+#measurement-controls button {
+  background: linear-gradient(to bottom, #175d69 23%, #330c43 95%);
+  color: white;
+  font-weight: 700;
+  text-align: center;
+  height: 25px; 
+  width: 25px; 
+  border-radius: 2px; 
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#measurement-controls button img {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0) invert(1);
+}
+
+#measurement-controls button:hover {
+  background-color: #2980b9;
+}
+
+#measurement-controls button:active {
+  background-color: #1f618d;
 }
 
 .myButton {
@@ -89,8 +149,8 @@
   position: absolute;
   display: block;
   /* margin: 10px auto auto 10px; */
-  top: 10px;
-  left: 10px;
+  right: 8px;
+  bottom: 16%;
 }
 
 .homeButtonDiv{
@@ -298,16 +358,13 @@
   display: inline-block;
   position: absolute;
   z-index: 2000;
-  top: 8px;
+  top: 5px;
   right: 10px;
   bottom: auto;
   left: 40px;
   height: 25px;
   width: 250px;
   box-sizing: border-box;
-  /* margin-left: -5px; */
-  /* padding: 7px 9px 0px 9px; */
-  /* background: linear-gradient(to bottom, #175d69 23%, #330c43 95%); */
   border: 3px solid #330c43;
   background-color: transparent;
   border-radius: 10px;
@@ -364,18 +421,26 @@
   z-index: 2000;
   position: absolute;
   background-color: transparent;
-  /* background: linear-gradient(to bottom, #175d69 23%, #330c43 95%); */
-  /* border-radius: 5px; */
-  width: 35px;
-  height: 35px;
-  right: 5px;
-  bottom: 8%;
+  background: linear-gradient(to bottom, #175d69 23%, #330c43 95%);
+  border-radius: 2px;
+  width: 25px;
+  height: 25px;
+  right: 8px;
+  bottom: 10%;
   border: none;
+  padding: 0;
+  margin: 0;
+  color: #fff;
 }
 
 #btnCrosshair.clicked {
   color: red;
 }
+
+#btnCrosshair:hover {
+  color: #fff;
+}
+
 
 /* MEASURE RESULT */
 #measurementResults {

@@ -112,17 +112,6 @@
   .aside:not(.hidden) {
   display: block;
 }
-  .edge-panel-toggle {
-    background-color: #3498db;
-    color: #fff;
-    padding: 10px;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .edge-panel-toggle:hover {
-    background-color: #2980b9;
-  }
   
   /* Footer styles */
   .footer{

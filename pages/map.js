@@ -8,10 +8,6 @@ var map = new ol.Map({
   target: "map",
   view: mapView,
   controls: [
-    new ol.control.Zoom({
-      className: "zoom",
-    }),
-    // new ol.control.ZoomSlider(),
     new ol.control.ZoomToExtent({
       className: "zoom-to-extent",
     }),
@@ -20,7 +16,6 @@ var map = new ol.Map({
       className: "ol-print-to-scale",
       label: "N",
       tipLabel: "North",
-      // Additional options for ol.control.Rotate can be added here
     }),
 
     new ol.control.Attribution(),
@@ -45,7 +40,7 @@ var map = new ol.Map({
       minWidth: 100,
     }),
 
-    // new ol.control.OverviewMap(),
+    new ol.control.OverviewMap(),
     new ol.control.LayerSwitcher(),
   ],
 
@@ -58,15 +53,16 @@ var bingSatellite = new ol.layer.Tile({
   type: "base",
   visible: false,
   source: new ol.source.BingMaps({
-    key: "AstqSWN2XWpS7yTd1GQ6mSp6ADE-IFOaLveo30y7PhE2iz7CDA8nvsvO-3YsEeXF", // Replace with your Bing Maps API key
+    key: "AstqSWN2XWpS7yTd1GQ6mSp6ADE-IFOaLveo30y7PhE2iz7CDA8nvsvO-3YsEeXF",
     imagerySet: "AerialWithLabels",
   }),
 });
 
+// Bing Maps
 var bingStreetsWithLabels = new ol.layer.Tile({
   title: "Bing Streets",
   type: "base",
-  visible: false, // Set to true if you want it to be initially visible
+  visible: false,
   source: new ol.source.BingMaps({
     key: "AstqSWN2XWpS7yTd1GQ6mSp6ADE-IFOaLveo30y7PhE2iz7CDA8nvsvO-3YsEeXF",
     imagerySet: "RoadOnDemand",
@@ -77,7 +73,7 @@ var bingStreetsWithLabels = new ol.layer.Tile({
 var osmTile = new ol.layer.Tile({
   title: "OSM",
   type: "base",
-  visible: true,
+  visible: false,
   attributions: "",
   source: new ol.source.OSM(),
 });
@@ -88,7 +84,7 @@ var mapboxAccessToken =
 var mapboxTile = new ol.layer.Tile({
   title: "Mapbox Streets",
   type: "base",
-  visible: true,
+  visible: false,
   attributions: "© Mapbox",
   source: new ol.source.XYZ({
     url:
@@ -103,7 +99,7 @@ var googleMapsApiKey = "AIzaSyBBe7xyfVIq6EmKffOupLL50mniuvRyT1A";
 var googleMapsLayer = new ol.layer.Tile({
   title: "Google Maps",
   type: "base",
-  visible: true, // Set to true if you want it to be initially visible
+  visible: true,
   source: new ol.source.XYZ({
     url: "https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
     crossOrigin: "anonymous",
@@ -367,15 +363,463 @@ $(function () {
 });
 // ONLOAD FUNCTIONS
 
+// *****************************************************
+document.getElementById("lengthBtn").addEventListener("click", function () {
+  changeMeasurementType("LineString");
+});
+
+document.getElementById("areaBtn").addEventListener("click", function () {
+  changeMeasurementType("Polygon");
+});
+
+document.getElementById("pointBtn").addEventListener("click", function () {
+  changeMeasurementType("Point");
+});
+
+document.getElementById("circleBtn").addEventListener("click", function () {
+  changeMeasurementType("Circle");
+});
+
+document.getElementById("modifyBtn").addEventListener("click", function () {
+  modifySelectedFeature();
+});
+
+document.getElementById("clearBtn").addEventListener("click", function () {
+  clearSelectedFeature();
+});
+
+// Measurement-related JavaScript code (Add this part)
+const style = new ol.style.Style({
+  fill: new ol.style.Fill({
+    color: "rgba(255, 255, 255, 0.2)",
+  }),
+  stroke: new ol.style.Stroke({
+    color: "rgba(0, 0, 0, 0.5)",
+    lineDash: [10, 10],
+    width: 2,
+  }),
+  image: new ol.style.Circle({
+    radius: 5,
+    stroke: new ol.style.Stroke({
+      color: "rgba(0, 0, 0, 0.7)",
+    }),
+    fill: new ol.style.Fill({
+      color: "rgba(255, 255, 255, 0.2)",
+    }),
+  }),
+});
+
+const labelStyle = new ol.style.Style({
+  text: new ol.style.Text({
+    font: "14px Calibri,sans-serif",
+    fill: new ol.style.Fill({
+      color: "rgba(255, 255, 255, 1)",
+    }),
+    backgroundFill: new ol.style.Fill({
+      color: "rgba(0, 0, 0, 0.7)",
+    }),
+    padding: [3, 3, 3, 3],
+    textBaseline: "bottom",
+    offsetY: -15,
+  }),
+  image: new ol.style.RegularShape({
+    radius: 8,
+    points: 3,
+    angle: Math.PI,
+    displacement: [0, 10],
+    fill: new ol.style.Fill({
+      color: "rgba(0, 0, 0, 0.7)",
+    }),
+  }),
+});
+
+const tipStyle = new ol.style.Style({
+  text: new ol.style.Text({
+    font: "12px Calibri,sans-serif",
+    fill: new ol.style.Fill({
+      color: "rgba(255, 255, 255, 1)",
+    }),
+    backgroundFill: new ol.style.Fill({
+      color: "rgba(0, 0, 0, 0.4)",
+    }),
+    padding: [2, 2, 2, 2],
+    textAlign: "left",
+    offsetX: 15,
+  }),
+});
+
+const modifyStyle = new ol.style.Style({
+  image: new ol.style.Circle({
+    radius: 5,
+    stroke: new ol.style.Stroke({
+      color: "rgba(0, 0, 0, 0.7)",
+    }),
+    fill: new ol.style.Fill({
+      color: "rgba(0, 0, 0, 0.4)",
+    }),
+  }),
+  text: new ol.style.Text({
+    text: "Drag to modify",
+    font: "12px Calibri,sans-serif",
+    fill: new ol.style.Fill({
+      color: "rgba(255, 255, 255, 1)",
+    }),
+    backgroundFill: new ol.style.Fill({
+      color: "rgba(0, 0, 0, 0.7)",
+    }),
+    padding: [2, 2, 2, 2],
+    textAlign: "left",
+    offsetX: 15,
+  }),
+});
+
+const segmentStyle = new ol.style.Style({
+  text: new ol.style.Text({
+    font: "12px Calibri,sans-serif",
+    fill: new ol.style.Fill({
+      color: "rgba(255, 255, 255, 1)",
+    }),
+    backgroundFill: new ol.style.Fill({
+      color: "rgba(0, 0, 0, 0.4)",
+    }),
+    padding: [2, 2, 2, 2],
+    textBaseline: "bottom",
+    offsetY: -12,
+  }),
+  image: new ol.style.RegularShape({
+    radius: 6,
+    points: 3,
+    angle: Math.PI,
+    displacement: [0, 8],
+    fill: new ol.style.Fill({
+      color: "rgba(0, 0, 0, 0.4)",
+    }),
+  }),
+});
+
+// Define additional styles for Point and Circle
+const pointStyle = new ol.style.Style({
+  image: new ol.style.Circle({
+    radius: 6,
+    fill: new ol.style.Fill({
+      color: "rgba(255, 0, 0, 0.8)", // Red color for points
+    }),
+    stroke: new ol.style.Stroke({
+      color: "rgba(255, 255, 255, 1)",
+      width: 2,
+    }),
+  }),
+});
+
+const circleStyle = new ol.style.Style({
+  fill: new ol.style.Fill({
+    color: "rgba(0, 128, 255, 0.2)", // Blue color for circle fill
+  }),
+  stroke: new ol.style.Stroke({
+    color: "rgba(0, 0, 255, 0.7)", // Dark blue color for circle border
+    width: 2,
+  }),
+});
+
+const showSegments = true;
+const segmentStyles = [segmentStyle];
+
+const formatLength = function (line) {
+  const length = ol.sphere.getLength(line, {
+    projection: mapView.getProjection(),
+  });
+  let output;
+  if (length > 100) {
+    output = Math.round((length / 1000) * 100) / 100 + " km";
+  } else {
+    output = Math.round(length * 100) / 100 + " m";
+  }
+  return output;
+};
+
+const formatArea = function (polygon) {
+  const area = ol.sphere.getArea(polygon, {
+    projection: mapView.getProjection(),
+  });
+  let output;
+  if (area > 100000000) {
+    output =
+      Math.round((area / 1000000) * 100) / 100 +
+      " " +
+      "km²" +
+      " Or " +
+      (Math.round(area * 100) / 100 + " " + "m²");
+  } else {
+    output = Math.round(area * 100) / 100 + " m\xB2";
+  }
+  areaInput.value = output.split(" ")[0];
+  return output;
+};
+
+const raster = new ol.layer.Tile({
+  source: new ol.source.OSM(),
+  visible: false,
+});
+
+const source = new ol.source.Vector();
+
+const modify = new ol.interaction.Modify({
+  source: source,
+  style: modifyStyle,
+});
+
+let tipPoint;
+
+function styleFunction(feature, segments, drawType, tip) {
+  const radiusTextStyle = new ol.style.Style({
+    text: new ol.style.Text({
+      font: "12px Calibri,sans-serif",
+      fill: new ol.style.Fill({
+        color: "rgba(255, 255, 255, 1)",
+      }),
+      backgroundFill: new ol.style.Fill({
+        color: "rgba(0, 0, 0, 0.7)",
+      }),
+      padding: [2, 2, 2, 2],
+      textAlign: "left",
+      offsetX: 15,
+    }),
+  });
+
+  const styles = [];
+  const geometry = feature.getGeometry();
+  const type = geometry.getType();
+  let point, label, line, radius;
+
+  if (!drawType || drawType === type || type === "Point") {
+    styles.push(style);
+
+    if (type === "Polygon") {
+      point = geometry.getInteriorPoint();
+      label = formatArea(geometry);
+      line = new ol.geom.LineString(geometry.getCoordinates()[0]);
+    } else if (type === "LineString") {
+      point = new ol.geom.Point(geometry.getLastCoordinate());
+      label = formatLength(geometry);
+      line = geometry;
+    } else if (type === "Point") {
+      styles.push(pointStyle);
+      label = "";
+    } else if (type === "Circle") {
+      styles.push(circleStyle);
+      radius = formatRadius(geometry);
+
+      // Create a new circle geometry for styling
+      const circleGeometry = new ol.geom.Circle(
+        geometry.getCenter(),
+        geometry.getRadius()
+      );
+      circleStyle.setGeometry(circleGeometry);
+    }
+  }
+
+  if (segments && (line || radius)) {
+    let count = 0;
+
+    if (line) {
+      line.forEachSegment(function (a, b) {
+        const segment = new ol.geom.LineString([a, b]);
+        const label = formatLength(segment);
+
+        if (segmentStyles.length - 1 < count) {
+          segmentStyles.push(segmentStyle.clone());
+        }
+
+        const segmentPoint = new ol.geom.Point(segment.getCoordinateAt(0.5));
+        segmentStyles[count].setGeometry(segmentPoint);
+        segmentStyles[count].getText().setText(label);
+        styles.push(segmentStyles[count]);
+        count++;
+      });
+    } else if (radius) {
+      const label = formatRadiusLine(radius);
+      const radiusLine = new ol.geom.LineString([
+        geometry.getCenter(),
+        geometry.getLastCoordinate(),
+      ]);
+
+      segmentStyle.getText().setText(label);
+      styles.push(segmentStyle);
+    }
+  }
+
+  if (label) {
+    labelStyle.setGeometry(point);
+    labelStyle.getText().setText(label);
+    styles.push(labelStyle);
+  }
+
+  if (
+    tip &&
+    type === "Point" &&
+    !modify.getOverlay().getSource().getFeatures().length
+  ) {
+    tipPoint = geometry;
+    tipStyle.getText().setText(tip);
+    styles.push(tipStyle);
+  }
+
+  return styles;
+}
+
+function formatRadiusLine(radius) {
+  return "Radius: " + formatLength(radius);
+}
+
+function formatRadius(circle) {
+  const radius = circle.getRadius();
+  let output;
+
+  if (radius > 1000) {
+    output = Math.round(radius / 1000) + " km";
+  } else {
+    output = Math.round(radius) + " m";
+  }
+
+  return output;
+}
+
+const vector = new ol.layer.Vector({
+  source: source,
+  style: function (feature) {
+    return styleFunction(feature, true); // Always show segment lengths
+  },
+});
+
+map.addLayer(raster);
+map.addLayer(vector);
+
+map.addInteraction(modify);
+
+let draw; // global so we can remove it later
+
+function addInteraction(type) {
+  const drawType = type;
+  const activeTip = "" + (drawType === "Polygon" ? "polygon" : "line");
+  const idleTip = "";
+  let tip = idleTip;
+  draw = new ol.interaction.Draw({
+    source: source,
+    type: drawType,
+    style: function (feature) {
+      return styleFunction(feature, showSegments.checked, drawType, tip);
+    },
+  });
+
+  draw.on("drawstart", function () {
+    if (clearPrevious.checked) {
+      source.clear();
+    }
+    modify.setActive(false);
+    tip = activeTip;
+  });
+
+  draw.on("drawend", function (event) {
+    modifyStyle.setGeometry(tipPoint);
+    modify.setActive(true);
+    map.once("pointermove", function () {
+      modifyStyle.setGeometry();
+    });
+    tip = idleTip;
+
+    var geometry = event.feature.getGeometry();
+
+    if (geometry instanceof ol.geom.LineString) {
+      var lengthOutput = formatLength(geometry);
+      document.getElementById("lengthResult").textContent =
+        "Total Distance Covered: " + lengthOutput;
+
+      document.getElementById("areaResult").textContent = "";
+    } else if (geometry instanceof ol.geom.Polygon) {
+      var areaOutput = formatArea(geometry);
+      document.getElementById("areaResult").textContent =
+        "Total Area Covered: " + areaOutput;
+
+      document.getElementById("lengthResult").textContent = "";
+    }
+  });
+
+  modify.setActive(true);
+  map.addInteraction(draw);
+}
+
+// Modify the type change event to use the selected type
+function changeMeasurementType(type) {
+  map.removeInteraction(draw);
+  addInteraction(type);
+}
+
+// Function to modify the selected feature
+function modifySelectedFeature() {
+  modify.setActive(true);
+}
+
+// Function to clear the selected feature
+function clearSelectedFeature() {
+  modify.setActive(false);
+  source.clear();
+}
+
+// Initialize undo/redo stacks
+const undoStack = [];
+const redoStack = [];
+
+// Function to push the current state to the undo stack
+function pushToUndoStack(geometry) {
+  undoStack.push(geometry.clone());
+  redoStack.length = 0; // Clear redo stack when a new modification is made
+}
+
+// Add modify end event listener to push changes to undo stack
+modify.on("modifyend", function (event) {
+  const features = event.features.getArray();
+  const geometry = features[0].getGeometry();
+  pushToUndoStack(geometry);
+});
+
+// Function to undo the last modification
+function undo() {
+  if (undoStack.length > 0) {
+    const geometry = undoStack.pop();
+    redoStack.push(geometry.clone());
+
+    const feature = new ol.Feature(geometry);
+    source.clear();
+    source.addFeature(feature);
+  }
+}
+
+// Function to redo the undone modification
+function redo() {
+  if (redoStack.length > 0) {
+    const geometry = redoStack.pop();
+    undoStack.push(geometry.clone());
+
+    const feature = new ol.Feature(geometry);
+    source.clear();
+    source.addFeature(feature);
+  }
+}
+
+// Add click event listeners to the Undo and Redo buttons
+document.getElementById("undoBtn").addEventListener("click", function () {
+  undo();
+});
+
+document.getElementById("redoBtn").addEventListener("click", function () {
+  redo();
+});
+
+// *****************************************************
+
 //TOOLBAR TOOLBAR CONTROLS
 var toolbarDivElement = document.createElement("div");
 toolbarDivElement.className = "toolbarDiv";
-
-//ADDING ALL TOOLBAR CONTROLS
-var allControl = new ol.control.Control({
-  element: toolbarDivElement,
-});
-map.addControl(allControl);
 
 // HOME TOOLBAR
 var homeButton = document.createElement("button");
@@ -390,7 +834,7 @@ homeElement.appendChild(homeButton);
 toolbarDivElement.appendChild(homeElement);
 
 homeButton.addEventListener("click", () => {
-  location.href = "pages/map.html"; // Adjust the path based on your file structure
+  location.href = "/pages/map.html";
 });
 
 //ZOOM-IN TOOLBAR
@@ -461,450 +905,456 @@ zoButton.addEventListener("click", () => {
   }
 });
 
-// POINT MARKER TOOLBAR
-var pointMarkerFlag = false;
-var pointMarkerButton = document.createElement("button");
-pointMarkerButton.innerHTML =
-  '<img src="/resources/images/map.png" alt="" class="myImg" />';
-pointMarkerButton.className = "myButton";
-pointMarkerButton.id = "pointMarkerButton";
-pointMarkerButton.title = "Place Point Marker";
-
-var pointMarkerElement = document.createElement("div");
-pointMarkerElement.className = "myButtonDiv";
-pointMarkerElement.appendChild(pointMarkerButton);
-toolbarDivElement.appendChild(pointMarkerElement);
-
-var draw,
-  modify,
-  undoStack = [],
-  redoStack = [];
-
-function addPointMarker(coordinates) {
-  var point = new ol.Feature(new ol.geom.Point(coordinates));
-
-  var pointStyle = new ol.style.Style({
-    image: new ol.style.Circle({
-      radius: 9,
-      fill: new ol.style.Fill({
-        color: [0, 153, 255, 1],
-      }),
-      stroke: new ol.style.Stroke({
-        color: [255, 255, 255, 1],
-        width: 5,
-      }),
-    }),
-  });
-
-  point.setStyle(pointStyle);
-  source.addFeature(point);
-
-  // Push the point to the undo stack
-  undoStack.push(point);
-
-  return point;
-}
-
-function undo() {
-  if (undoStack.length > 0) {
-    var lastFeature = undoStack.pop();
-    redoStack.push(lastFeature);
-    source.removeFeature(lastFeature);
-  }
-}
-
-function redo() {
-  if (redoStack.length > 0) {
-    var lastFeature = redoStack.pop();
-    undoStack.push(lastFeature);
-    source.addFeature(lastFeature);
-  }
-}
-
-pointMarkerButton.addEventListener("click", () => {
-  pointMarkerFlag = !pointMarkerFlag;
-  pointMarkerButton.classList.toggle("clicked", pointMarkerFlag);
-  document.getElementById("map").style.cursor = pointMarkerFlag
-    ? "crosshair"
-    : "default";
-
-  if (pointMarkerFlag) {
-    map.removeInteraction(draw);
-    map.removeInteraction(modify);
-    undoStack = [];
-    redoStack = [];
-  } else {
-    map.removeInteraction(draw);
-    source.clear();
-    const elements = document.getElementsByClassName(
-      "ol-tooltip ol-tooltip-static"
-    );
-    while (elements.length > 0) elements[0].remove();
-  }
+//ADDING ALL TOOLBAR CONTROLS
+var allControl = new ol.control.Control({
+  element: toolbarDivElement,
 });
+map.addControl(allControl);
 
-map.on("click", function (event) {
-  if (pointMarkerFlag) {
-    var coordinates = event.coordinate;
-    var point = addPointMarker(coordinates);
+// // POINT MARKER TOOLBAR
+// var pointMarkerFlag = false;
+// var pointMarkerButton = document.createElement("button");
+// pointMarkerButton.innerHTML =
+//   '<img src="/resources/images/map.png" alt="" class="myImg" />';
+// pointMarkerButton.className = "myButton";
+// pointMarkerButton.id = "pointMarkerButton";
+// pointMarkerButton.title = "Place Point Marker";
 
-    // Make the point modifiable after adding
-    modify = new ol.interaction.Modify({
-      features: new ol.Collection([point]),
-      deleteCondition: function (event) {
-        return (
-          ol.events.condition.shiftKeyOnly(event) &&
-          ol.events.condition.singleClick(event)
-        );
-      },
-    });
-    map.addInteraction(modify);
-  }
-});
+// var pointMarkerElement = document.createElement("div");
+// pointMarkerElement.className = "myButtonDiv";
+// pointMarkerElement.appendChild(pointMarkerButton);
+// toolbarDivElement.appendChild(pointMarkerElement);
 
-// UNDO BUTTON
-var undoButton = document.createElement("button");
-undoButton.innerHTML =
-  '<img src="/resources/images/undo.svg" alt="" class="myImg" />';
-undoButton.className = "myButton";
-undoButton.title = "Undo";
+// var draw,
+//   modify,
+//   undoStack = [],
+//   redoStack = [];
 
-var undoElement = document.createElement("div");
-undoElement.className = "undoButtonDiv";
-undoElement.appendChild(undoButton);
-toolbarDivElement.appendChild(undoElement);
+// function addPointMarker(coordinates) {
+//   var point = new ol.Feature(new ol.geom.Point(coordinates));
 
-undoButton.addEventListener("click", undo);
+//   var pointStyle = new ol.style.Style({
+//     image: new ol.style.Circle({
+//       radius: 9,
+//       fill: new ol.style.Fill({
+//         color: [0, 153, 255, 1],
+//       }),
+//       stroke: new ol.style.Stroke({
+//         color: [255, 255, 255, 1],
+//         width: 5,
+//       }),
+//     }),
+//   });
 
-// REDO BUTTON
-var redoButton = document.createElement("button");
-redoButton.innerHTML =
-  '<img src="/resources/images/redo.svg" alt="" class="myImg" />';
-redoButton.className = "myButton";
-redoButton.title = "Redo";
+//   point.setStyle(pointStyle);
+//   source.addFeature(point);
 
-var redoElement = document.createElement("div");
-redoElement.className = "redoButtonDiv";
-redoElement.appendChild(redoButton);
-toolbarDivElement.appendChild(redoElement);
+//   // Push the point to the undo stack
+//   undoStack.push(point);
 
-redoButton.addEventListener("click", redo);
+//   return point;
+// }
 
-// DISTANCE AND AREA MEASURE
-var lengthButton = document.createElement("button");
-lengthButton.innerHTML =
-  '<img src="/resources/images/measure-length.png" alt="" class="myImg" />';
-lengthButton.className = "myButton";
-lengthButton.id = "lengthButton";
-lengthButton.title = "Measure Length";
+// function undo() {
+//   if (undoStack.length > 0) {
+//     var lastFeature = undoStack.pop();
+//     redoStack.push(lastFeature);
+//     source.removeFeature(lastFeature);
+//   }
+// }
 
-var lengthElement = document.createElement("div");
-lengthElement.className = "myButtonDiv";
-lengthElement.appendChild(lengthButton);
-toolbarDivElement.appendChild(lengthElement);
+// function redo() {
+//   if (redoStack.length > 0) {
+//     var lastFeature = redoStack.pop();
+//     undoStack.push(lastFeature);
+//     source.addFeature(lastFeature);
+//   }
+// }
 
-var lengthFlag = false;
-lengthButton.addEventListener("click", () => {
-  // disableOtherInteraction('lengthButton');
-  lengthButton.classList.toggle("clicked");
-  lengthFlag = !lengthFlag;
-  document.getElementById("map").style.cursor = "default";
-  if (lengthFlag) {
-    map.removeInteraction(draw);
-    addInteraction("LineString");
-  } else {
-    map.removeInteraction(draw);
-    source.clear();
-    const elements = document.getElementsByClassName(
-      "ol-tooltip ol-tooltip-static"
-    );
-    while (elements.length > 0) elements[0].remove();
-  }
-});
+// pointMarkerButton.addEventListener("click", () => {
+//   pointMarkerFlag = !pointMarkerFlag;
+//   pointMarkerButton.classList.toggle("clicked", pointMarkerFlag);
+//   document.getElementById("map").style.cursor = pointMarkerFlag
+//     ? "crosshair"
+//     : "default";
 
-var areaButton = document.createElement("button");
-areaButton.innerHTML =
-  '<img src="/resources/images/measure-area-svgrepo-com.svg" alt="" class="myImg" />';
-areaButton.className = "myButton";
-areaButton.id = "areaButton";
-areaButton.title = "Measure Area";
+//   if (pointMarkerFlag) {
+//     map.removeInteraction(draw);
+//     map.removeInteraction(modify);
+//     undoStack = [];
+//     redoStack = [];
+//   } else {
+//     map.removeInteraction(draw);
+//     source.clear();
+//     const elements = document.getElementsByClassName(
+//       "ol-tooltip ol-tooltip-static"
+//     );
+//     while (elements.length > 0) elements[0].remove();
+//   }
+// });
 
-var areaElement = document.createElement("div");
-areaElement.className = "myButtonDiv";
-areaElement.appendChild(areaButton);
-toolbarDivElement.appendChild(areaElement);
+// map.on("click", function (event) {
+//   if (pointMarkerFlag) {
+//     var coordinates = event.coordinate;
+//     var point = addPointMarker(coordinates);
 
-var areaFlag = false;
-areaButton.addEventListener("click", () => {
-  // disableOtherInteraction('areaButton');
-  areaButton.classList.toggle("clicked");
-  areaFlag = !areaFlag;
-  document.getElementById("map").style.cursor = "default";
-  if (areaFlag) {
-    map.removeInteraction(draw);
-    addInteraction("Polygon");
-  } else {
-    map.removeInteraction(draw);
-    source.clear();
-    const elements = document.getElementsByClassName(
-      "ol-tooltip ol-tooltip-static"
-    );
-    while (elements.length > 0) elements[0].remove();
-  }
-});
+//     // Make the point modifiable after adding
+//     modify = new ol.interaction.Modify({
+//       features: new ol.Collection([point]),
+//       deleteCondition: function (event) {
+//         return (
+//           ol.events.condition.shiftKeyOnly(event) &&
+//           ol.events.condition.singleClick(event)
+//         );
+//       },
+//     });
+//     map.addInteraction(modify);
+//   }
+// });
 
-/**
- * Message to show when the user is drawing a polygon.
- * @type {string}
- */
-var continuePolygonMsg = "Click to continue polygon, Double click to complete";
+// // UNDO BUTTON
+// var undoButton = document.createElement("button");
+// undoButton.innerHTML =
+//   '<img src="/resources/images/undo.svg" alt="" class="myImg" />';
+// undoButton.className = "myButton";
+// undoButton.title = "Undo";
 
-/**
- * Message to show when the user is drawing a line.
- * @type {string}
- */
-var continueLineMsg = "Click to continue line, Double click to complete";
+// var undoElement = document.createElement("div");
+// undoElement.className = "undoButtonDiv";
+// undoElement.appendChild(undoButton);
+// toolbarDivElement.appendChild(undoElement);
 
-var draw; // global so we can remove it later
+// undoButton.addEventListener("click", undo);
 
-var source = new ol.source.Vector();
+// // REDO BUTTON
+// var redoButton = document.createElement("button");
+// redoButton.innerHTML =
+//   '<img src="/resources/images/redo.svg" alt="" class="myImg" />';
+// redoButton.className = "myButton";
+// redoButton.title = "Redo";
 
-var vector = new ol.layer.Vector({
-  source: source,
-  style: new ol.style.Style({
-    fill: new ol.style.Fill({
-      color: "rgba(255, 255, 255, 0.2)",
-    }),
-    stroke: new ol.style.Stroke({
-      color: "#0e97fa",
-      width: 4,
-    }),
-    image: new ol.style.Circle({
-      radius: 4,
-      fill: new ol.style.Fill({
-        color: "#0e97fa",
-      }),
-    }),
-  }),
-});
+// var redoElement = document.createElement("div");
+// redoElement.className = "redoButtonDiv";
+// redoElement.appendChild(redoButton);
+// toolbarDivElement.appendChild(redoElement);
 
-map.addLayer(vector);
+// redoButton.addEventListener("click", redo);
 
-var interactionStyle = new ol.style.Style({
-  fill: new ol.style.Fill({
-    color: "rgba(200, 200, 200, 0.6)",
-  }),
-  stroke: new ol.style.Stroke({
-    color: "#0e97fa)",
-    lineDash: [10, 10],
-    width: 2,
-  }),
-  image: new ol.style.Circle({
-    radius: 4,
-    stroke: new ol.style.Stroke({
-      color: "rgba(0, 0, 0, 0.7)",
-    }),
-    fill: new ol.style.Fill({
-      color: "rgba(255, 255, 255, 0.2)",
-    }),
-  }),
-});
+// // DISTANCE AND AREA MEASURE
+// var lengthButton = document.createElement("button");
+// lengthButton.innerHTML =
+//   '<img src="/resources/images/measure-length.png" alt="" class="myImg" />';
+// lengthButton.className = "myButton";
+// lengthButton.id = "lengthButton";
+// lengthButton.title = "Measure Length";
 
-function addInteraction(intType) {
-  draw = new ol.interaction.Draw({
-    source: source,
-    type: intType,
-    style: interactionStyle,
-  });
-  map.addInteraction(draw);
+// var lengthElement = document.createElement("div");
+// lengthElement.className = "myButtonDiv";
+// lengthElement.appendChild(lengthButton);
+// toolbarDivElement.appendChild(lengthElement);
 
-  createMeasureTooltip();
-  createHelpTooltip();
+// var lengthFlag = false;
+// lengthButton.addEventListener("click", () => {
+//   // disableOtherInteraction('lengthButton');
+//   lengthButton.classList.toggle("clicked");
+//   lengthFlag = !lengthFlag;
+//   document.getElementById("map").style.cursor = "default";
+//   if (lengthFlag) {
+//     map.removeInteraction(draw);
+//     addInteraction("LineString");
+//   } else {
+//     map.removeInteraction(draw);
+//     source.clear();
+//     const elements = document.getElementsByClassName(
+//       "ol-tooltip ol-tooltip-static"
+//     );
+//     while (elements.length > 0) elements[0].remove();
+//   }
+// });
 
-  /**
-   * Currently drawn feature.
-   * @type {import("../src/ol/Feature.js").default}
-   */
-  var sketch;
+// var areaButton = document.createElement("button");
+// areaButton.innerHTML =
+//   '<img src="/resources/images/measure-area-svgrepo-com.svg" alt="" class="myImg" />';
+// areaButton.className = "myButton";
+// areaButton.id = "areaButton";
+// areaButton.title = "Measure Area";
 
-  /**
-   * Handle pointer move.
-   * @param {import("../src/ol/MapBrowserEvent").default} evt The event.
-   */
-  var pointerMoveHandler = function (evt) {
-    if (evt.dragging) {
-      return;
-    }
-    /** @type {string} */
-    var helpMsg = "Click to start drawing";
+// var areaElement = document.createElement("div");
+// areaElement.className = "myButtonDiv";
+// areaElement.appendChild(areaButton);
+// toolbarDivElement.appendChild(areaElement);
 
-    if (sketch) {
-      var geom = sketch.getGeometry();
-      if (geom instanceof ol.geom.Polygon) {
-        helpMsg = continuePolygonMsg;
-      } else if (geom instanceof ol.geom.LineString) {
-        helpMsg = continueLineMsg;
-      }
-    }
+// var areaFlag = false;
+// areaButton.addEventListener("click", () => {
+//   // disableOtherInteraction('areaButton');
+//   areaButton.classList.toggle("clicked");
+//   areaFlag = !areaFlag;
+//   document.getElementById("map").style.cursor = "default";
+//   if (areaFlag) {
+//     map.removeInteraction(draw);
+//     addInteraction("Polygon");
+//   } else {
+//     map.removeInteraction(draw);
+//     source.clear();
+//     const elements = document.getElementsByClassName(
+//       "ol-tooltip ol-tooltip-static"
+//     );
+//     while (elements.length > 0) elements[0].remove();
+//   }
+// });
 
-    helpTooltipElement.innerHTML = helpMsg;
-    helpTooltip.setPosition(evt.coordinate);
+// /**
+//  * Message to show when the user is drawing a polygon.
+//  * @type {string}
+//  */
+// var continuePolygonMsg = "Click to continue polygon, Double click to complete";
 
-    helpTooltipElement.classList.remove("hidden");
-  };
+// /**
+//  * Message to show when the user is drawing a line.
+//  * @type {string}
+//  */
+// var continueLineMsg = "Click to continue line, Double click to complete";
 
-  map.on("pointermove", pointerMoveHandler);
+// var draw; // global so we can remove it later
 
-  // var listener;
-  draw.on("drawstart", function (evt) {
-    // set sketch
-    sketch = evt.feature;
+// var source = new ol.source.Vector();
 
-    /** @type {import("../src/ol/coordinate.js").Coordinate|undefined} */
-    var tooltipCoord = evt.coordinate;
+// var vector = new ol.layer.Vector({
+//   source: source,
+//   style: new ol.style.Style({
+//     fill: new ol.style.Fill({
+//       color: "rgba(255, 255, 255, 0.2)",
+//     }),
+//     stroke: new ol.style.Stroke({
+//       color: "#0e97fa",
+//       width: 4,
+//     }),
+//     image: new ol.style.Circle({
+//       radius: 4,
+//       fill: new ol.style.Fill({
+//         color: "#0e97fa",
+//       }),
+//     }),
+//   }),
+// });
 
-    //listener = sketch.getGeometry().on('change', function (evt) {
-    sketch.getGeometry().on("change", function (evt) {
-      var geom = evt.target;
-      var output;
-      if (geom instanceof ol.geom.Polygon) {
-        output = formatArea(geom);
-        tooltipCoord = geom.getInteriorPoint().getCoordinates();
-      } else if (geom instanceof ol.geom.LineString) {
-        output = formatLength(geom);
-        tooltipCoord = geom.getLastCoordinate();
-      }
-      measureTooltipElement.innerHTML = output;
-      measureTooltip.setPosition(tooltipCoord);
-    });
-  });
+// map.addLayer(vector);
 
-  draw.on("drawend", function (event) {
-    measureTooltipElement.className = "ol-tooltip ol-tooltip-static";
-    measureTooltip.setOffset([0, -7]);
-    sketch = null;
-    measureTooltipElement = null;
-    createMeasureTooltip();
+// var interactionStyle = new ol.style.Style({
+//   fill: new ol.style.Fill({
+//     color: "rgba(200, 200, 200, 0.6)",
+//   }),
+//   stroke: new ol.style.Stroke({
+//     color: "#0e97fa)",
+//     lineDash: [10, 10],
+//     width: 2,
+//   }),
+//   image: new ol.style.Circle({
+//     radius: 4,
+//     stroke: new ol.style.Stroke({
+//       color: "rgba(0, 0, 0, 0.7)",
+//     }),
+//     fill: new ol.style.Fill({
+//       color: "rgba(255, 255, 255, 0.2)",
+//     }),
+//   }),
+// });
 
-    var geometry = event.feature.getGeometry();
+// function addInteraction(intType) {
+//   draw = new ol.interaction.Draw({
+//     source: source,
+//     type: intType,
+//     style: interactionStyle,
+//   });
+//   map.addInteraction(draw);
 
-    if (geometry instanceof ol.geom.LineString) {
-      var lengthOutput = formatLength(geometry);
-      document.getElementById("lengthResult").textContent =
-        "Total Distance Covered: " + lengthOutput;
+//   createMeasureTooltip();
+//   createHelpTooltip();
 
-      document.getElementById("areaResult").textContent = "";
-    } else if (geometry instanceof ol.geom.Polygon) {
-      var areaOutput = formatArea(geometry);
-      document.getElementById("areaResult").textContent =
-        "Total Area Covered: " + areaOutput;
+//   /**
+//    * Currently drawn feature.
+//    * @type {import("../src/ol/Feature.js").default}
+//    */
+//   var sketch;
 
-      document.getElementById("lengthResult").textContent = "";
-    }
-  });
-}
+//   /**
+//    * Handle pointer move.
+//    * @param {import("../src/ol/MapBrowserEvent").default} evt The event.
+//    */
+//   var pointerMoveHandler = function (evt) {
+//     if (evt.dragging) {
+//       return;
+//     }
+//     /** @type {string} */
+//     var helpMsg = "Click to start drawing";
 
-/**
- * The help tooltip element.
- * @type {HTMLElement}
- */
-var helpTooltipElement;
+//     if (sketch) {
+//       var geom = sketch.getGeometry();
+//       if (geom instanceof ol.geom.Polygon) {
+//         helpMsg = continuePolygonMsg;
+//       } else if (geom instanceof ol.geom.LineString) {
+//         helpMsg = continueLineMsg;
+//       }
+//     }
 
-/**
- * Overlay to show the help messages.
- * @type {Overlay}
- */
-var helpTooltip;
+//     helpTooltipElement.innerHTML = helpMsg;
+//     helpTooltip.setPosition(evt.coordinate);
 
-/**
- * Creates a new help tooltip
- */
-function createHelpTooltip() {
-  if (helpTooltipElement) {
-    helpTooltipElement.parentNode.removeChild(helpTooltipElement);
-  }
-  helpTooltipElement = document.createElement("div");
-  helpTooltipElement.className = "ol-tooltip hidden";
-  helpTooltip = new ol.Overlay({
-    element: helpTooltipElement,
-    offset: [15, 0],
-    positioning: "center-left",
-  });
-  map.addOverlay(helpTooltip);
-}
+//     helpTooltipElement.classList.remove("hidden");
+//   };
 
-//  map.getViewport().addEventListener('mouseout', function () {
-//    helpTooltipElement.classList.add('hidden');
-//  });
+//   map.on("pointermove", pointerMoveHandler);
 
-/**
- * The measure tooltip element.
- * @type {HTMLElement}
- */
-var measureTooltipElement;
+//   // var listener;
+//   draw.on("drawstart", function (evt) {
+//     // set sketch
+//     sketch = evt.feature;
 
-/**
- * Overlay to show the measurement.
- * @type {Overlay}
- */
-var measureTooltip;
+//     /** @type {import("../src/ol/coordinate.js").Coordinate|undefined} */
+//     var tooltipCoord = evt.coordinate;
 
-/**
- * Creates a new measure tooltip
- */
+//     //listener = sketch.getGeometry().on('change', function (evt) {
+//     sketch.getGeometry().on("change", function (evt) {
+//       var geom = evt.target;
+//       var output;
+//       if (geom instanceof ol.geom.Polygon) {
+//         output = formatArea(geom);
+//         tooltipCoord = geom.getInteriorPoint().getCoordinates();
+//       } else if (geom instanceof ol.geom.LineString) {
+//         output = formatLength(geom);
+//         tooltipCoord = geom.getLastCoordinate();
+//       }
+//       measureTooltipElement.innerHTML = output;
+//       measureTooltip.setPosition(tooltipCoord);
+//     });
+//   });
 
-function createMeasureTooltip() {
-  if (measureTooltipElement) {
-    measureTooltipElement.parentNode.removeChild(measureTooltipElement);
-  }
-  measureTooltipElement = document.createElement("div");
-  measureTooltipElement.className = "ol-tooltip ol-tooltip-measure";
-  measureTooltip = new ol.Overlay({
-    element: measureTooltipElement,
-    offset: [0, -15],
-    positioning: "bottom-center",
-  });
-  map.addOverlay(measureTooltip);
-}
+//   draw.on("drawend", function (event) {
+//     measureTooltipElement.className = "ol-tooltip ol-tooltip-static";
+//     measureTooltip.setOffset([0, -7]);
+//     sketch = null;
+//     measureTooltipElement = null;
+//     createMeasureTooltip();
 
-/**
- * Format length output.
- * @param {LineString} line The line.
- * @return {string} The formatted length.
- */
-var formatLength = function (line) {
-  var length = ol.sphere.getLength(line);
-  var output;
-  if (length > 100) {
-    output = Math.round((length / 1000) * 100) / 100 + " " + "km";
-  } else {
-    output = Math.round(length * 100) / 100 + " " + "m";
-  }
-  return output;
-};
+// var geometry = event.feature.getGeometry();
 
-/**
- * Format area output.
- * @param {Polygon} polygon The polygon.
- * @return {string} Formatted area.
- */
+// if (geometry instanceof ol.geom.LineString) {
+//   var lengthOutput = formatLength(geometry);
+//   document.getElementById("lengthResult").textContent =
+//     "Total Distance Covered: " + lengthOutput;
 
-var formatArea = function (polygon) {
-  var area = ol.sphere.getArea(polygon);
-  var output;
-  if (area > 100000000) {
-    output =
-      Math.round((area / 1000000) * 100) / 100 +
-      " " +
-      "km²" +
-      " Or " +
-      (Math.round(area * 100) / 100 + " " + "m²");
-  } else {
-    output = Math.round(area * 100) / 100 + " " + "m²";
-  }
-  areaInput.value = output.split(" ")[0];
-  return output;
-};
+//   document.getElementById("areaResult").textContent = "";
+// } else if (geometry instanceof ol.geom.Polygon) {
+//   var areaOutput = formatArea(geometry);
+//   document.getElementById("areaResult").textContent =
+//     "Total Area Covered: " + areaOutput;
+
+//   document.getElementById("lengthResult").textContent = "";
+// }
+//   });
+// }
+
+// /**
+//  * The help tooltip element.
+//  * @type {HTMLElement}
+//  */
+// var helpTooltipElement;
+
+// /**
+//  * Overlay to show the help messages.
+//  * @type {Overlay}
+//  */
+// var helpTooltip;
+
+// /**
+//  * Creates a new help tooltip
+//  */
+// function createHelpTooltip() {
+//   if (helpTooltipElement) {
+//     helpTooltipElement.parentNode.removeChild(helpTooltipElement);
+//   }
+//   helpTooltipElement = document.createElement("div");
+//   helpTooltipElement.className = "ol-tooltip hidden";
+//   helpTooltip = new ol.Overlay({
+//     element: helpTooltipElement,
+//     offset: [15, 0],
+//     positioning: "center-left",
+//   });
+//   map.addOverlay(helpTooltip);
+// }
+
+// //  map.getViewport().addEventListener('mouseout', function () {
+// //    helpTooltipElement.classList.add('hidden');
+// //  });
+
+// /**
+//  * The measure tooltip element.
+//  * @type {HTMLElement}
+//  */
+// var measureTooltipElement;
+
+// /**
+//  * Overlay to show the measurement.
+//  * @type {Overlay}
+//  */
+// var measureTooltip;
+
+// /**
+//  * Creates a new measure tooltip
+//  */
+
+// function createMeasureTooltip() {
+//   if (measureTooltipElement) {
+//     measureTooltipElement.parentNode.removeChild(measureTooltipElement);
+//   }
+//   measureTooltipElement = document.createElement("div");
+//   measureTooltipElement.className = "ol-tooltip ol-tooltip-measure";
+//   measureTooltip = new ol.Overlay({
+//     element: measureTooltipElement,
+//     offset: [0, -15],
+//     positioning: "bottom-center",
+//   });
+//   map.addOverlay(measureTooltip);
+// }
+
+// /**
+//  * Format length output.
+//  * @param {LineString} line The line.
+//  * @return {string} The formatted length.
+//  */
+// var formatLength = function (line) {
+//   var length = ol.sphere.getLength(line);
+//   var output;
+//   if (length > 100) {
+//     output = Math.round((length / 1000) * 100) / 100 + " " + "km";
+//   } else {
+//     output = Math.round(length * 100) / 100 + " " + "m";
+//   }
+//   return output;
+// };
+
+// /**
+//  * Format area output.
+//  * @param {Polygon} polygon The polygon.
+//  * @return {string} Formatted area.
+//  */
+
+// var formatArea = function (polygon) {
+//   var area = ol.sphere.getArea(polygon);
+//   var output;
+// if (area > 100000000) {
+//   output =
+//     Math.round((area / 1000000) * 100) / 100 +
+//     " " +
+//     "km²" +
+//     " Or " +
+//     (Math.round(area * 100) / 100 + " " + "m²");
+//   } else {
+//     output = Math.round(area * 100) / 100 + " " + "m²";
+//   }
+//   areaInput.value = output.split(" ")[0];
+//   return output;
+// };
 
 //------------------------------------------
 const areaInput = document.getElementById("area");

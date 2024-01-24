@@ -1,21 +1,0 @@
-<?xml version="1.0" ?>
-<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-<svg width="800px" height="800px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-<defs>
-<style>.c{stroke:#1237a5;}.c,.d,.e,.f{fill:none;stroke-linecap:round;stroke-linejoin:round;}.d,.e,.f{stroke:#4eb8ff;}.e{stroke-dasharray:0 0 3 3;}.f{stroke-dasharray:0 0 3.34 3.34;}</style>
-</defs>
-<g id="a"/>
-<g id="b">
-<g>
-<polyline class="d" points="7.99 19.5 2.5 19.5 2.5 16.5"/>
-<line class="e" x1="2.5" x2="2.5" y1="13.5" y2="9"/>
-<polyline class="d" points="2.5 7.5 2.5 4.5 5.5 4.5"/>
-<line class="f" x1="8.83" x2="13.84" y1="4.5" y2="4.5"/>
-<polyline class="d" points="15.5 4.5 18.5 4.5 18.5 7"/>
-</g>
-<path class="c" d="M18.8,13.39c0,2.98-2.42,5.4-5.4,5.4s-5.4-2.42-5.4-5.4,2.42-5.4,5.4-5.4,5.4,2.42,5.4,5.4Z"/>
-<line class="c" x1="17.35" x2="21.5" y1="17.31" y2="21.5"/>
-<line class="c" x1="10.5" x2="16.5" y1="13.5" y2="13.5"/>
-<line class="c" x1="13.5" x2="13.5" y1="10.5" y2="16.5"/>
-</g>
-</svg>
