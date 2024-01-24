@@ -47,6 +47,7 @@ loginBtn.addEventListener("click", (e) => {
 });
 //SIGN UP/SIGN IN FORM//
 
+// Inside your script.js or map.js
 function toggleEdgePanels() {
   var aside1 = document.querySelector(".aside1");
   var aside2 = document.querySelector(".aside2");

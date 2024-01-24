@@ -109,6 +109,10 @@
     display: none;
   }
 
+  .aside.hidden {
+    display: none;
+  }
+  
   .aside:not(.hidden) {
   display: block;
 }
