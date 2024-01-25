@@ -40,7 +40,6 @@ var map = new ol.Map({
       minWidth: 100,
     }),
 
-    new ol.control.OverviewMap(),
     new ol.control.LayerSwitcher(),
   ],
 
