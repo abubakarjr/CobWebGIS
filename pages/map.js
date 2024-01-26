@@ -12,12 +12,6 @@ var map = new ol.Map({
       className: "zoom-to-extent",
     }),
 
-    new ol.control.Rotate({
-      className: "ol-print-to-scale",
-      label: "N",
-      tipLabel: "North",
-    }),
-
     new ol.control.Attribution(),
 
     new ol.control.FullScreen({
@@ -42,8 +36,6 @@ var map = new ol.Map({
 
     new ol.control.LayerSwitcher(),
   ],
-
-  rotation: Math.PI / 6,
 });
 
 // Bing Maps Satellite
@@ -130,6 +122,55 @@ var baseGroup = new ol.layer.Group({
   ],
 });
 map.addLayer(baseGroup);
+
+// Define an initial rotation value
+let initialRotation = 0;
+
+// Add a pointer interaction to handle rotation
+const rotateInteraction = new ol.interaction.Pointer({
+  handleDownEvent: function (event) {
+    // Start tracking the rotation on pointer down
+    this.rotationStart = map.getView().getRotation();
+    this.anchor = event.coordinate;
+    return true;
+  },
+  handleDragEvent: function (event) {
+    // Calculate the new rotation during drag
+    const dx = event.coordinate[0] - this.anchor[0];
+    const dy = event.coordinate[1] - this.anchor[1];
+    const deltaRotation = Math.atan2(dy, dx) - Math.atan2(0, 0);
+    const newRotation = this.rotationStart - deltaRotation;
+
+    // Set the new rotation to the view
+    map.getView().setRotation(newRotation);
+
+    return true;
+  },
+});
+
+// Update the rotation icon based on the map rotation
+map.on("postrender", function () {
+  const rotateIcon = document.getElementById("rotateIcon");
+  const rotation = map.getView().getRotation();
+  rotateIcon.style.transform = `rotate(${rotation}rad)`;
+});
+
+// Add click event listener to the rotate control
+const rotateControl = document.getElementById("rotateBtn");
+rotateControl.addEventListener("click", toggleRotation);
+
+// Toggle the rotation interaction
+function toggleRotation() {
+  if (map.getInteractions().getArray().includes(rotateInteraction)) {
+    // If rotation interaction is active, set the rotation back to its initial state
+    map.removeInteraction(rotateInteraction);
+    map.getView().setRotation(0); // Reset the rotation
+  } else {
+    // If rotation interaction is not active, store the current rotation as initial
+    initialRotation = map.getView().getRotation();
+    map.addInteraction(rotateInteraction);
+  }
+}
 
 // Elements that make up the popup.
 const container = document.getElementById("popup");

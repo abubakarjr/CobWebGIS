@@ -5,6 +5,47 @@
 }
 
 /* MAIN CONTROL */
+
+.rotate-control {
+  position: absolute;
+  z-index: 5000;
+  background-color: transparent;
+  cursor: pointer;
+  right: 0;
+  top: 0;
+  border-radius: 2px; 
+  font-weight: 700;
+  text-align: center;
+  border: none;
+  display: flex;
+  margin: 5px;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.rotate-control img {
+  width: 50px; /* Adjust width as needed */
+  height: 50px; /* Adjust height as needed */
+}
+
+.rotate-control button:hover {
+  background-color: #f0f0f0; /* Add a hover effect if desired */
+}
+
+.rotate-animation {
+  animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .ol-print-to-scale {
   position: absolute;
   z-index: 5000;
