@@ -83,6 +83,14 @@
           <div id="measurement-controls" class="measurement-controls">
             <div id="type">
               <button
+                title="Add Marker"
+                type="button"
+                id="pointBtn"
+                data-type="Point"
+              >
+                <img src="/resources/images/marker.svg" alt="" />
+              </button>
+              <button
                 title="Distance Measure"
                 type="button"
                 id="lengthBtn"
@@ -98,19 +106,12 @@
               >
                 <img src="/resources/images/area.svg" alt="" />
               </button>
-              <button
-                title="Add Marker"
-                type="button"
-                id="pointBtn"
-                data-type="Point"
-              >
-                <img src="/resources/images/marker.svg" alt="" />
-              </button>
               <button title="Clear Measurement" type="button" id="clearBtn">
                 <img src="/resources/images/clear1.svg" alt="" />
               </button>
-              <button id="popup-toggle-btn" onclick="togglePopup()">               
+              <button title="Info" id="popup-toggle-btn" onclick="togglePopup()">               
                 <img src="/resources/images/map-info-svgrepo-com.svg" alt="" />
+                <title></title>
               </button>
               <!-- <button
                 title="Save Features"
