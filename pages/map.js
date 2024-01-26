@@ -131,11 +131,11 @@ var baseGroup = new ol.layer.Group({
 });
 map.addLayer(baseGroup);
 
-// ****************
 // Elements that make up the popup.
 const container = document.getElementById("popup");
 const content = document.getElementById("popup-content");
 const closer = document.getElementById("popup-closer");
+const toggleBtn = document.getElementById("popup-toggle-btn");
 
 // Create an overlay to anchor the popup to the map.
 const overlay = new ol.Overlay({
@@ -156,6 +156,9 @@ closer.onclick = function () {
 
 // Add the overlay to the map
 map.addOverlay(overlay);
+
+// Variable to track if the popup interaction is active
+let popupInteractionActive = false;
 
 // Function to format coordinates as a string (Latitude, Longitude)
 function formatLatLon(coordinate) {
@@ -188,23 +191,31 @@ function copyToClipboard() {
   document.body.removeChild(textArea);
 }
 
-// Add a click event to the map
-map.on("click", function (event) {
-  const coordinate = event.coordinate;
-  showPopup(coordinate);
-});
-
-// Function to toggle the popup
-function togglePopup() {
-  if (overlay.getPosition()) {
-    overlay.setPosition(undefined);
-  } else {
-    const center = ol.proj.fromLonLat([7.442544, 10.542135]);
-    overlay.setPosition(center);
+// Function to handle map click events
+function handleMapClick(event) {
+  if (popupInteractionActive) {
+    const coordinate = event.coordinate;
+    showPopup(coordinate);
   }
 }
 
-// ****************
+// Add a click event to the map
+map.on("click", handleMapClick);
+
+// Function to toggle the entire process
+function togglePopupInteraction() {
+  popupInteractionActive = !popupInteractionActive;
+  if (!popupInteractionActive) {
+    // Deactivate the popup interaction
+    map.un("click", handleMapClick);
+    overlay.setPosition(undefined);
+  }
+}
+
+// Toggle Button Click Event
+toggleBtn.onclick = function () {
+  togglePopupInteraction();
+};
 
 // LOCATION SEARCH
 var bingApiKey =
