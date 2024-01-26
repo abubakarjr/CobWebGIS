@@ -169,16 +169,16 @@
     margin: 5px;
   }
   
-  .hero h3 {
-    font-size: 34px;
+  .hero h1 {
+    /* font-size: 34px; */
     padding: 5px;
     margin: 5px;
     text-align: center;
   }
   
   .hero p {
-    text-align: justify;
-    font-size: 30px;
+    text-align: left;
+    /* font-size: 30px; */
     margin: 10px;
     padding: 10px;
   }
@@ -453,8 +453,8 @@
     margin: 0 auto;
   }
   
-  .about-section h2 {
-    font-size: 40px;
+  .about-section h1 {
+    /* font-size: 40px; */
     color: #fff;
     text-align: center;
     margin-bottom: 20px;
@@ -462,7 +462,7 @@
   
   .about-section p {
     
-    font-size: 22px;
+    /* font-size: 22px; */
     color: #fff;
     line-height: 1.6;
     margin-bottom: 15px;
@@ -490,15 +490,15 @@
   
   /* Improved styles for paragraphs and headings */
   .contact-info p {
-    font-size: 16px;
+    /* font-size: 16px; */
     line-height: 1.5;
     color: #fff;
     margin-bottom: 10px;
   }
   
-  .contact-info h2,
-  .contact-form h2 {
-    font-size: 24px;
+  .contact-info h1,
+  .contact-form h1 {
+    /* font-size: 24px; */
     margin-bottom: 20px;
     color: #fff;
   }

@@ -1,108 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>CobWeb GIS</title>
-    <link rel="shortcut icon " href="/resources/images/cobweb-svgrepo-com (1).svg">
-    <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-</head>
-<body>
+    <link
+      rel="shortcut icon "
+      href="/resources/images/cobweb-svgrepo-com (1).svg"
+    />
+    <link rel="stylesheet" href="/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+  </head>
+  <body>
     <div class="wrapper">
+      <!-- Header -->
+      <header class="header">
+        <nav class="nav">
+          <i class="uil uil-bars navOpenBtn"></i>
+          <a href="/index.html">
+            <img
+              class="img-logo"
+              src="/resources/images/cobweb-svgrepo-com (3).png"
+              alt="Hompage"
+            />
+          </a>
+          <!-- <a href="/layout/home.html" class="logo">CobWeb GIS</a> -->
+          <ul class="nav-links">
+            <i class="uil uil-times navCloseBtn"></i>
+            <li><a href="/pages/map.html">Map</a></li>
+            <li><a href="/pages/about.html">About</a></li>
+            <li><a href="/pages/contact.html">Contact</a></li>
+          </ul>
+          <button class="button" id="form-open">Account</button>
+        </nav>
+      </header>
 
-        <!-- Header -->
-        <header class="header">
-            <nav class="nav">
-              <i class="uil uil-bars navOpenBtn"></i>
-              <a href="/index.html">
-                <img class="img-logo" src="/resources/images/cobweb-svgrepo-com (3).png" alt="Hompage">
-              </a>
-              <!-- <a href="/layout/home.html" class="logo">CobWeb GIS</a> -->
-              <ul class="nav-links">
-                <i class="uil uil-times navCloseBtn"></i>
-                <li><a href="/pages/map.html">Map</a></li>
-                <li><a href="/pages/about.html">About</a></li>
-                <li><a href="/pages/contact.html">Contact</a></li>
-              </ul>
-              <button class="button" id="form-open">Account</button>
-            </nav>       
-        </header>
-        
-        <!-- Main Page -->
-        <main class="main">
-        
-            <section class="hero-section scrollable-container">
-                <div class="hero">
-                  <h3>Measure Your Land and Property Online - Easy and Accurate!</h2>
-                  <p>
-                    Tired of inaccurate and time-consuming land measurement methods? 
-                    <br><br> 
-                    Say goodbye to the days of pacing and guesswork! 
-                    <br><br>
-                    With our innovative web mapping application, you can now measure your land and property accurately and conveniently from your computer or mobile device.
-                  </p>
-                  <div class="buttons">
-                    <a href="/pages/map.html" class="join" >Join Now</a>
-                    <a href="/pages/about.html" class="learn">Learn More</a>
-                  </div>
-                </div>
-              </section>
-              
+      <!-- Main Page -->
+      <main class="main">
+        <section class="hero-section scrollable-container">
+          <div class="hero">
+            <h1>Measure Your Land and Property Online - Easy and Accurate!</h1>
+            <p>
+              Tired of inaccurate and time-consuming land measurement methods?
+              <br /><br />
+              Say goodbye to the days of pacing and guesswork!
+              <br /><br />
+              With our innovative web mapping application, you can now measure
+              your land and property accurately and conveniently from your
+              computer or mobile device.
+            </p>
+            <div class="buttons">
+              <a href="/pages/map.html" class="join">Join Now</a>
+              <a href="/pages/about.html" class="learn">Learn More</a>
+            </div>
+          </div>
+        </section>
+
         <!-- Home -->
         <section class="home">
-        <div class="form_container">
-          <i class="uil uil-times form_close"></i>
-          
-          <!-- Login From -->
-          <div class="form login_form">
-            <form action="#">
-              <h2>Login</h2>
-  
-              <div class="input_box">
-                <input type="email" placeholder="Enter your email" required />
-                <i class="uil uil-envelope-alt email"></i>
-              </div>
-              <div class="input_box">
-                <input type="password" placeholder="Enter your password" required />
-                <i class="uil uil-lock password"></i>
-                <i class="uil uil-eye-slash pw_hide"></i>
-              </div>
-  
-              <div class="option_field">
-                <span class="checkbox">
-                  <input type="checkbox" id="check" />
-                  <label for="check">Remember me</label>
-                </span>
-                <a href="#" class="forgot_pw">Forgot password?</a>
-              </div>
-  
-              <button class="button">Login Now</button>
-  
-              <div class="login_signup">Don't have an account? <a href="#" id="signup">Signup</a></div>
-            </form>
-          </div>
-  
-          <!-- Signup From -->
-          <div class="form signup_form">
-            <form action="#">
-              <h2>Signup</h2>
-                
-                 <!-- New Fields -->
+          <div class="form_container">
+            <i class="uil uil-times form_close"></i>
+
+            <!-- Login From -->
+            <div class="form login_form">
+              <form action="#">
+                <h2>Login</h2>
+
                 <div class="input_box">
-                    <input type="text" placeholder="Full Name" required />
-                    <i class="uil uil-user-circle email"></i>
+                  <input type="email" placeholder="Enter your email" required />
+                  <i class="uil uil-envelope-alt email"></i>
                 </div>
-            
                 <div class="input_box">
-                    <select name="gender" id="gender" required>
+                  <input
+                    type="password"
+                    placeholder="Enter your password"
+                    required
+                  />
+                  <i class="uil uil-lock password"></i>
+                  <i class="uil uil-eye-slash pw_hide"></i>
+                </div>
+
+                <div class="option_field">
+                  <span class="checkbox">
+                    <input type="checkbox" id="check" />
+                    <label for="check">Remember me</label>
+                  </span>
+                  <a href="#" class="forgot_pw">Forgot password?</a>
+                </div>
+
+                <button class="button">Login Now</button>
+
+                <div class="login_signup">
+                  Don't have an account? <a href="#" id="signup">Signup</a>
+                </div>
+              </form>
+            </div>
+
+            <!-- Signup From -->
+            <div class="form signup_form">
+              <form action="#">
+                <h2>Signup</h2>
+
+                <!-- New Fields -->
+                <div class="input_box">
+                  <input type="text" placeholder="Full Name" required />
+                  <i class="uil uil-user-circle email"></i>
+                </div>
+
+                <div class="input_box">
+                  <select name="gender" id="gender" required>
                     <option value="" disabled selected>Select Gender</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
-                    </select>
-                    <i class="uil uil-venus-mars email"></i>
+                  </select>
+                  <i class="uil uil-venus-mars email"></i>
                 </div>
 
                 <div class="input_box">
@@ -111,36 +130,43 @@
                 </div>
 
                 <div class="input_box">
-                  <input type="password" placeholder="Create password" required />
+                  <input
+                    type="password"
+                    placeholder="Create password"
+                    required
+                  />
                   <i class="uil uil-lock password"></i>
                   <i class="uil uil-eye-slash pw_hide"></i>
                 </div>
-                
+
                 <div class="input_box">
-                  <input type="password" placeholder="Confirm password" required />
+                  <input
+                    type="password"
+                    placeholder="Confirm password"
+                    required
+                  />
                   <i class="uil uil-lock password"></i>
                   <i class="uil uil-eye-slash pw_hide"></i>
                 </div>
-    
+
                 <button class="button">Signup Now</button>
-  
-                <div class="login_signup">Already have an account? <a href="#" id="login">Login</a></div>
-            </form>
-            
+
+                <div class="login_signup">
+                  Already have an account? <a href="#" id="login">Login</a>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
-      </section>
-  </main>  
+        </section>
+      </main>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <P>© CobWeb GIS 2023    info@cobwebgis.com    +234 8038 098 851</P>
-  </footer>
-
-
-  </div>
+      <!-- Footer -->
+      <footer class="footer">
+        <p>© CobWeb GIS 2023 info@cobwebgis.com +234 8038 098 851</p>
+      </footer>
+    </div>
 
     <!-- JavaScript -->
     <script src="/script.js"></script>
-</body>
+  </body>
 </html>
