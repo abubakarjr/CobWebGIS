@@ -131,6 +131,81 @@ var baseGroup = new ol.layer.Group({
 });
 map.addLayer(baseGroup);
 
+// ****************
+// Elements that make up the popup.
+const container = document.getElementById("popup");
+const content = document.getElementById("popup-content");
+const closer = document.getElementById("popup-closer");
+
+// Create an overlay to anchor the popup to the map.
+const overlay = new ol.Overlay({
+  element: container,
+  autoPan: {
+    animation: {
+      duration: 250,
+    },
+  },
+});
+
+// Add a click handler to hide the popup.
+closer.onclick = function () {
+  overlay.setPosition(undefined);
+  closer.blur();
+  return false;
+};
+
+// Add the overlay to the map
+map.addOverlay(overlay);
+
+// Function to format coordinates as a string (Latitude, Longitude)
+function formatLatLon(coordinate) {
+  const lonLat = ol.proj.toLonLat(coordinate);
+  return lonLat
+    .map((coord) => coord.toFixed(6))
+    .reverse()
+    .join(", ");
+}
+
+// Function to show popup at a specific coordinate
+function showPopup(coordinate) {
+  const latLonString = formatLatLon(coordinate);
+  const contentHTML =
+    "<p>You clicked here:</p><code id='coordCode'>" +
+    latLonString +
+    "</code><button onclick='copyToClipboard()'>Copy</button>";
+  content.innerHTML = contentHTML;
+  overlay.setPosition(coordinate);
+}
+
+// Function to copy the coordinate to the clipboard
+function copyToClipboard() {
+  const coordCode = document.getElementById("coordCode");
+  const textArea = document.createElement("textarea");
+  textArea.value = coordCode.textContent;
+  document.body.appendChild(textArea);
+  textArea.select();
+  document.execCommand("copy");
+  document.body.removeChild(textArea);
+}
+
+// Add a click event to the map
+map.on("click", function (event) {
+  const coordinate = event.coordinate;
+  showPopup(coordinate);
+});
+
+// Function to toggle the popup
+function togglePopup() {
+  if (overlay.getPosition()) {
+    overlay.setPosition(undefined);
+  } else {
+    const center = ol.proj.fromLonLat([7.442544, 10.542135]);
+    overlay.setPosition(center);
+  }
+}
+
+// ****************
+
 // LOCATION SEARCH
 var bingApiKey =
   "AstqSWN2XWpS7yTd1GQ6mSp6ADE-IFOaLveo30y7PhE2iz7CDA8nvsvO-3YsEeXF";
@@ -375,14 +450,6 @@ document.getElementById("pointBtn").addEventListener("click", function () {
   changeMeasurementType("Point");
 });
 
-document.getElementById("circleBtn").addEventListener("click", function () {
-  changeMeasurementType("Circle");
-});
-
-document.getElementById("modifyBtn").addEventListener("click", function () {
-  modifySelectedFeature();
-});
-
 document.getElementById("clearBtn").addEventListener("click", function () {
   clearSelectedFeature();
 });
@@ -393,14 +460,14 @@ const style = new ol.style.Style({
     color: "rgba(255, 255, 255, 0.2)",
   }),
   stroke: new ol.style.Stroke({
-    color: "rgba(0, 0, 0, 0.5)",
+    color: "#000",
     lineDash: [10, 10],
-    width: 2,
+    width: 4,
   }),
   image: new ol.style.Circle({
-    radius: 5,
+    radius: 4,
     stroke: new ol.style.Stroke({
-      color: "rgba(0, 0, 0, 0.7)",
+      color: "#0e97fa",
     }),
     fill: new ol.style.Fill({
       color: "rgba(255, 255, 255, 0.2)",
@@ -457,6 +524,7 @@ const modifyStyle = new ol.style.Style({
       color: "rgba(0, 0, 0, 0.4)",
     }),
   }),
+
   text: new ol.style.Text({
     text: "Drag to modify",
     font: "12px Calibri,sans-serif",
@@ -496,27 +564,12 @@ const segmentStyle = new ol.style.Style({
   }),
 });
 
-// Define additional styles for Point and Circle
+// Replace the existing pointStyle definition with the new customPointStyle
 const pointStyle = new ol.style.Style({
-  image: new ol.style.Circle({
-    radius: 6,
-    fill: new ol.style.Fill({
-      color: "rgba(255, 0, 0, 0.8)", // Red color for points
-    }),
-    stroke: new ol.style.Stroke({
-      color: "rgba(255, 255, 255, 1)",
-      width: 2,
-    }),
-  }),
-});
-
-const circleStyle = new ol.style.Style({
-  fill: new ol.style.Fill({
-    color: "rgba(0, 128, 255, 0.2)", // Blue color for circle fill
-  }),
-  stroke: new ol.style.Stroke({
-    color: "rgba(0, 0, 255, 0.7)", // Dark blue color for circle border
-    width: 2,
+  image: new ol.style.Icon({
+    src: "/resources/images/marker.svg",
+    anchor: [0.5, 1],
+    scale: 0.03,
   }),
 });
 
@@ -570,25 +623,10 @@ const modify = new ol.interaction.Modify({
 let tipPoint;
 
 function styleFunction(feature, segments, drawType, tip) {
-  const radiusTextStyle = new ol.style.Style({
-    text: new ol.style.Text({
-      font: "12px Calibri,sans-serif",
-      fill: new ol.style.Fill({
-        color: "rgba(255, 255, 255, 1)",
-      }),
-      backgroundFill: new ol.style.Fill({
-        color: "rgba(0, 0, 0, 0.7)",
-      }),
-      padding: [2, 2, 2, 2],
-      textAlign: "left",
-      offsetX: 15,
-    }),
-  });
-
   const styles = [];
   const geometry = feature.getGeometry();
   const type = geometry.getType();
-  let point, label, line, radius;
+  let point, label, line;
 
   if (!drawType || drawType === type || type === "Point") {
     styles.push(style);
@@ -604,47 +642,26 @@ function styleFunction(feature, segments, drawType, tip) {
     } else if (type === "Point") {
       styles.push(pointStyle);
       label = "";
-    } else if (type === "Circle") {
-      styles.push(circleStyle);
-      radius = formatRadius(geometry);
-
-      // Create a new circle geometry for styling
-      const circleGeometry = new ol.geom.Circle(
-        geometry.getCenter(),
-        geometry.getRadius()
-      );
-      circleStyle.setGeometry(circleGeometry);
     }
   }
 
-  if (segments && (line || radius)) {
+  if (segments && line) {
     let count = 0;
 
-    if (line) {
-      line.forEachSegment(function (a, b) {
-        const segment = new ol.geom.LineString([a, b]);
-        const label = formatLength(segment);
+    line.forEachSegment(function (a, b) {
+      const segment = new ol.geom.LineString([a, b]);
+      const label = formatLength(segment);
 
-        if (segmentStyles.length - 1 < count) {
-          segmentStyles.push(segmentStyle.clone());
-        }
+      if (segmentStyles.length - 1 < count) {
+        segmentStyles.push(segmentStyle.clone());
+      }
 
-        const segmentPoint = new ol.geom.Point(segment.getCoordinateAt(0.5));
-        segmentStyles[count].setGeometry(segmentPoint);
-        segmentStyles[count].getText().setText(label);
-        styles.push(segmentStyles[count]);
-        count++;
-      });
-    } else if (radius) {
-      const label = formatRadiusLine(radius);
-      const radiusLine = new ol.geom.LineString([
-        geometry.getCenter(),
-        geometry.getLastCoordinate(),
-      ]);
-
-      segmentStyle.getText().setText(label);
-      styles.push(segmentStyle);
-    }
+      const segmentPoint = new ol.geom.Point(segment.getCoordinateAt(0.5));
+      segmentStyles[count].setGeometry(segmentPoint);
+      segmentStyles[count].getText().setText(label);
+      styles.push(segmentStyles[count]);
+      count++;
+    });
   }
 
   if (label) {
@@ -666,23 +683,6 @@ function styleFunction(feature, segments, drawType, tip) {
   return styles;
 }
 
-function formatRadiusLine(radius) {
-  return "Radius: " + formatLength(radius);
-}
-
-function formatRadius(circle) {
-  const radius = circle.getRadius();
-  let output;
-
-  if (radius > 1000) {
-    output = Math.round(radius / 1000) + " km";
-  } else {
-    output = Math.round(radius) + " m";
-  }
-
-  return output;
-}
-
 const vector = new ol.layer.Vector({
   source: source,
   style: function (feature) {
@@ -699,9 +699,10 @@ let draw; // global so we can remove it later
 
 function addInteraction(type) {
   const drawType = type;
-  const activeTip = "" + (drawType === "Polygon" ? "polygon" : "line");
+  const activeTip = drawType === "Polygon" ? "polygon" : "line";
   const idleTip = "";
   let tip = idleTip;
+
   draw = new ol.interaction.Draw({
     source: source,
     type: drawType,
@@ -711,9 +712,6 @@ function addInteraction(type) {
   });
 
   draw.on("drawstart", function () {
-    if (clearPrevious.checked) {
-      source.clear();
-    }
     modify.setActive(false);
     tip = activeTip;
   });
@@ -747,72 +745,28 @@ function addInteraction(type) {
   map.addInteraction(draw);
 }
 
-// Modify the type change event to use the selected type
+let activeDrawType = null;
+
 function changeMeasurementType(type) {
-  map.removeInteraction(draw);
-  addInteraction(type);
+  if (activeDrawType === type) {
+    map.removeInteraction(draw);
+    activeDrawType = null;
+  } else {
+    map.removeInteraction(draw);
+    addInteraction(type);
+    activeDrawType = type;
+  }
 }
 
-// Function to modify the selected feature
 function modifySelectedFeature() {
   modify.setActive(true);
 }
 
-// Function to clear the selected feature
 function clearSelectedFeature() {
   modify.setActive(false);
   source.clear();
 }
-
-// Initialize undo/redo stacks
-const undoStack = [];
-const redoStack = [];
-
-// Function to push the current state to the undo stack
-function pushToUndoStack(geometry) {
-  undoStack.push(geometry.clone());
-  redoStack.length = 0; // Clear redo stack when a new modification is made
-}
-
-// Add modify end event listener to push changes to undo stack
-modify.on("modifyend", function (event) {
-  const features = event.features.getArray();
-  const geometry = features[0].getGeometry();
-  pushToUndoStack(geometry);
-});
-
-// Function to undo the last modification
-function undo() {
-  if (undoStack.length > 0) {
-    const geometry = undoStack.pop();
-    redoStack.push(geometry.clone());
-
-    const feature = new ol.Feature(geometry);
-    source.clear();
-    source.addFeature(feature);
-  }
-}
-
-// Function to redo the undone modification
-function redo() {
-  if (redoStack.length > 0) {
-    const geometry = redoStack.pop();
-    undoStack.push(geometry.clone());
-
-    const feature = new ol.Feature(geometry);
-    source.clear();
-    source.addFeature(feature);
-  }
-}
-
-// Add click event listeners to the Undo and Redo buttons
-document.getElementById("undoBtn").addEventListener("click", function () {
-  undo();
-});
-
-document.getElementById("redoBtn").addEventListener("click", function () {
-  redo();
-});
+// *****************************************************
 
 // *****************************************************
 

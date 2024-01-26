@@ -48,11 +48,6 @@
             <li><a href="/pages/about.html">About</a></li>
             <li><a href="/pages/contact.html">Contact</a></li>
           </ul>
-          <!-- Inside the header section -->
-          <!-- <button class="edge-panel-toggle button" onclick="toggleEdgePanels()">
-            Toggle Panels
-          </button> -->
-
           <button class="button" id="form-open">Account</button>
         </nav>
       </header>
@@ -78,6 +73,12 @@
             </label>
           </div>
 
+          <!-- Popup -->
+          <div id="popup" class="ol-popup">
+            <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+            <div id="popup-content"></div>
+          </div>
+  
           <!-- Measurement Controls -->
           <div id="measurement-controls" class="measurement-controls">
             <div id="type">
@@ -105,25 +106,24 @@
               >
                 <img src="/resources/images/marker.svg" alt="" />
               </button>
-              <button
-                title="Radius Measure"
-                type="button"
-                id="circleBtn"
-                data-type="Circle"
-              >
-                <img src="/resources/images/radius.svg" alt="" />
-              </button>
-              <button title="Modification" type="button" id="modifyBtn">
-                <img src="/resources/images/modify.svg" alt="" />
-              </button>
               <button title="Clear Measurement" type="button" id="clearBtn">
                 <img src="/resources/images/clear1.svg" alt="" />
               </button>
-              <button title="Undo" type="button" id="undoBtn">
-                <img src="/resources/images/undo.svg" alt="" />
+              <!-- <button
+                title="Save Features"
+                type="button"
+                id="saveFeaturesBtn"
+                onclick="saveFeatures()"
+              >
+                <img src="/resources/images/save.svg" alt="" />
               </button>
-              <button title="Redo" type="button" id="redoBtn">
-                <img src="/resources/images/redo.svg" alt="" />
+              <button
+                title="Load Features"
+                type="button"
+                id="loadFeaturesBtn"
+                onclick="loadFeatures()"
+              >
+                <img src="/resources/images/load.svg" alt="" /> -->
               </button>
               <button
                 title="Edge Panels"
@@ -138,11 +138,6 @@
             </div>
           </div>
         </div>
-
-        <!-- <div id="popup" class="ol-popup">
-                    <a href="#" id="popup-closer" class="ol-popup-closer"></a>
-                    <div id="popup-content"></div>
-                </div> -->
       </main>
       <!-- Main Page -->
 
@@ -172,11 +167,6 @@
               placeholder="Latitude1, Longitude1&#10;Latitude2, Longitude2&#10;Latitude3, Longitude3"
             ></textarea>
             <button class="coodbtn" onclick="calculateArea()">Area</button>
-
-            <!-- REDO AND UNDU -->
-            <!-- <button id="undoButton" class="coodbtn">Undo</button>
-            <button id="redoButton" class="coodbtn">Redo</button> -->
-            <!-- <p id="result1"></p> -->
           </div>
         </div>
       </aside>
