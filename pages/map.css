@@ -107,21 +107,6 @@
   top: 75%;
 } */
 
-.mousePosition {
-  position: absolute;
-  top: auto;
-  right: auto;
-  bottom: 5px;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 1px solid rgb(18, 1, 1);
-  border-radius: 5px;
-  padding: 5px;
-  background-color: rgba(225, 225, 225, 0.6);
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  font-size: large;
-}
-
 .edge-panel-toggle {
   background-color: #3498db;
   color: #fff;
@@ -437,24 +422,42 @@
   opacity: 1;
 }
 
+.mousePosition {
+  position: absolute;
+  top: auto;
+  right: auto;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 2px solid rgb(18, 1, 1);
+  border-radius: 5px;
+  padding: 5px;
+  background-color: rgba(225, 225, 225, 0.6);
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: large;
+}
+
 /* Location search */
 .search {
-  display: inline-block;
   position: absolute;
   z-index: 2000;
   top: 5px;
-  right: 10px;
+  right: auto;
   bottom: auto;
-  left: 40px;
+  left: 50%;
   height: 25px;
-  width: 250px;
+  width: 220px;
+  border-radius: 5px;
   box-sizing: border-box;
-  border: 3px solid #330c43;
-  background-color: transparent;
-  border-radius: 10px;
+  border: 2px solid rgb(18, 1, 1);
+  background-color: rgba(225, 225, 225, 0.6);
+  border-radius: 5px;
   transition: all 200ms ease;
+  transform: translateX(-50%);
   cursor: text;
   outline-width: 10px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: large;
 }
 
 .search:after {
