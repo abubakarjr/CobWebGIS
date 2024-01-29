@@ -8,11 +8,10 @@
 
 .rotate-control {
   position: absolute;
-  z-index: 5000;
+  z-index: 10000;
   background-color: transparent;
   cursor: pointer;
-  left: 94%;
-  right: 10%;
+  right: 0;
   top: 0;
   border-radius: 2px; 
   font-weight: 700;
@@ -26,8 +25,8 @@
 }
 
 .rotate-control img {
-  width: 38px; /* Adjust width as needed */
-  height: 38px; /* Adjust height as needed */
+  width: 40px; 
+  height: 40px;
 }
 
 .rotate-control button:hover {

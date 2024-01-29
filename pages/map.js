@@ -489,32 +489,27 @@ document.addEventListener("keydown", function (event) {
 });
 
 function toggleFullscreen() {
-  const elem = document.documentElement;
+  var mapElement = document.getElementById("map");
 
-  if (
-    !document.fullscreenElement &&
-    !document.mozFullScreenElement &&
-    !document.webkitFullscreenElement &&
-    !document.msFullscreenElement
-  ) {
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    } else if (elem.msRequestFullscreen) {
-      elem.msRequestFullscreen();
-    } else if (elem.mozRequestFullScreen) {
-      elem.mozRequestFullScreen();
-    } else if (elem.webkitRequestFullscreen) {
-      elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+  if (!document.fullscreenElement) {
+    if (mapElement.requestFullscreen) {
+      mapElement.requestFullscreen();
+    } else if (mapElement.mozRequestFullScreen) {
+      mapElement.mozRequestFullScreen();
+    } else if (mapElement.webkitRequestFullscreen) {
+      mapElement.webkitRequestFullscreen();
+    } else if (mapElement.msRequestFullscreen) {
+      mapElement.msRequestFullscreen();
     }
   } else {
     if (document.exitFullscreen) {
       document.exitFullscreen();
-    } else if (document.msExitFullscreen) {
-      document.msExitFullscreen();
     } else if (document.mozCancelFullScreen) {
       document.mozCancelFullScreen();
     } else if (document.webkitExitFullscreen) {
       document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
     }
   }
 }
