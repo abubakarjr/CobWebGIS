@@ -8,16 +8,7 @@ var map = new ol.Map({
   target: "map",
   view: mapView,
   controls: [
-    new ol.control.ZoomToExtent({
-      className: "zoom-to-extent",
-    }),
-
     new ol.control.Attribution(),
-
-    new ol.control.FullScreen({
-      className: "custom-fullscreen-control",
-    }),
-
     new ol.control.MousePosition({
       className: "mousePosition",
       projection: "EPSG:4326",
@@ -489,6 +480,84 @@ $(function () {
 });
 // ONLOAD FUNCTIONS
 
+// FULL SCREEN CONTOL
+document.addEventListener("keydown", function (event) {
+  if (event.key === "f" && (event.ctrlKey || event.metaKey)) {
+    // Toggle fullscreen when Ctrl (or Cmd) + F is pressed
+    toggleFullscreen();
+  }
+});
+
+function toggleFullscreen() {
+  const elem = document.documentElement;
+
+  if (
+    !document.fullscreenElement &&
+    !document.mozFullScreenElement &&
+    !document.webkitFullscreenElement &&
+    !document.msFullscreenElement
+  ) {
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.msRequestFullscreen) {
+      elem.msRequestFullscreen();
+    } else if (elem.mozRequestFullScreen) {
+      elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) {
+      elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+    }
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    }
+  }
+}
+
+// ZOOM-IN & OUT
+// Define zoom interactions
+var zoomInInteraction = new ol.interaction.DragBox();
+var zoomOutInteraction = new ol.interaction.DragBox();
+
+// Track whether interactions are active
+var zoomInActive = false;
+var zoomOutActive = false;
+
+// Toggle Zoom In Interaction
+function toggleZoomInInteraction() {
+  if (!zoomInActive) {
+    map.addInteraction(zoomInInteraction);
+    zoomInInteraction.on("boxend", function () {
+      var zoomInExtent = zoomInInteraction.getGeometry().getExtent();
+      map.getView().fit(zoomInExtent);
+    });
+  } else {
+    map.removeInteraction(zoomInInteraction);
+  }
+  zoomInActive = !zoomInActive;
+}
+
+// Toggle Zoom Out Interaction
+function toggleZoomOutInteraction() {
+  if (!zoomOutActive) {
+    map.addInteraction(zoomOutInteraction);
+    zoomOutInteraction.on("boxend", function () {
+      var zoomOutExtent = zoomOutInteraction.getGeometry().getExtent();
+      map.getView().setCenter(ol.extent.getCenter(zoomOutExtent));
+      var mapView = map.getView();
+      mapView.setZoom(mapView.getZoom() - 1);
+    });
+  } else {
+    map.removeInteraction(zoomOutInteraction);
+  }
+  zoomOutActive = !zoomOutActive;
+}
+
 // *****************************************************
 document.getElementById("lengthBtn").addEventListener("click", function () {
   changeMeasurementType("LineString");
@@ -822,99 +891,99 @@ function clearSelectedFeature() {
 
 // *****************************************************
 
-//TOOLBAR TOOLBAR CONTROLS
-var toolbarDivElement = document.createElement("div");
-toolbarDivElement.className = "toolbarDiv";
+// //TOOLBAR TOOLBAR CONTROLS
+// var toolbarDivElement = document.createElement("div");
+// toolbarDivElement.className = "toolbarDiv";
 
-// HOME TOOLBAR
-var homeButton = document.createElement("button");
-homeButton.innerHTML =
-  '<img src="/resources/images/home.svg" alt="" class="myImg" />';
-homeButton.className = "myButton";
-homeButton.title = "Home";
+// // HOME TOOLBAR
+// var homeButton = document.createElement("button");
+// homeButton.innerHTML =
+//   '<img src="/resources/images/home.svg" alt="" class="myImg" />';
+// homeButton.className = "myButton";
+// homeButton.title = "Home";
 
-var homeElement = document.createElement("div");
-homeElement.className = "homeButtonDiv";
-homeElement.appendChild(homeButton);
-toolbarDivElement.appendChild(homeElement);
+// var homeElement = document.createElement("div");
+// homeElement.className = "homeButtonDiv";
+// homeElement.appendChild(homeButton);
+// toolbarDivElement.appendChild(homeElement);
 
-homeButton.addEventListener("click", () => {
-  location.href = "/pages/map.html";
-});
+// homeButton.addEventListener("click", () => {
+//   location.href = "/pages/map.html";
+// });
 
-//ZOOM-IN TOOLBAR
-var zoomInInteraction = new ol.interaction.DragBox();
+// //ZOOM-IN TOOLBAR
+// var zoomInInteraction = new ol.interaction.DragBox();
 
-zoomInInteraction.on("boxend", function () {
-  var zoomInExtent = zoomInInteraction.getGeometry().getExtent();
-  map.getView().fit(zoomInExtent);
-});
+// zoomInInteraction.on("boxend", function () {
+//   var zoomInExtent = zoomInInteraction.getGeometry().getExtent();
+//   map.getView().fit(zoomInExtent);
+// });
 
-var ziButton = document.createElement("button");
-ziButton.innerHTML =
-  '<img src="/resources/images/zoom_in.svg" alt="" class="myImg" />';
-ziButton.className = "myButton";
-ziButton.id = "ziButton";
-ziButton.title = "Zoom In";
+// var ziButton = document.createElement("button");
+// ziButton.innerHTML =
+//   '<img src="/resources/images/zoom_in.svg" alt="" class="myImg" />';
+// ziButton.className = "myButton";
+// ziButton.id = "ziButton";
+// ziButton.title = "Zoom In";
 
-var ziElement = document.createElement("div");
-ziElement.className = "myButtonDiv";
-ziElement.appendChild(ziButton);
-toolbarDivElement.appendChild(ziElement);
+// var ziElement = document.createElement("div");
+// ziElement.className = "myButtonDiv";
+// ziElement.appendChild(ziButton);
+// toolbarDivElement.appendChild(ziElement);
 
-var zoomInFlag = false;
-ziButton.addEventListener("click", () => {
-  ziButton.classList.toggle("clicked");
-  zoomInFlag = !zoomInFlag;
-  if (zoomInFlag) {
-    document.getElementById("map").style.cursor = "zoom-in";
-    map.addInteraction(zoomInInteraction);
-  } else {
-    map.removeInteraction(zoomInInteraction);
-    document.getElementById("map").style.cursor = "default";
-  }
-});
+// var zoomInFlag = false;
+// ziButton.addEventListener("click", () => {
+//   ziButton.classList.toggle("clicked");
+//   zoomInFlag = !zoomInFlag;
+//   if (zoomInFlag) {
+//     document.getElementById("map").style.cursor = "zoom-in";
+//     map.addInteraction(zoomInInteraction);
+//   } else {
+//     map.removeInteraction(zoomInInteraction);
+//     document.getElementById("map").style.cursor = "default";
+//   }
+// });
 
-// ZOOM-OUT TOOLBAR
-var zoomOutInteraction = new ol.interaction.DragBox();
+// // ZOOM-OUT TOOLBAR
+// var zoomOutInteraction = new ol.interaction.DragBox();
 
-zoomOutInteraction.on("boxend", function () {
-  var zoomOutExtent = zoomOutInteraction.getGeometry().getExtent();
-  map.getView().setCenter(ol.extent.getCenter(zoomOutExtent));
+// zoomOutInteraction.on("boxend", function () {
+//   var zoomOutExtent = zoomOutInteraction.getGeometry().getExtent();
+//   map.getView().setCenter(ol.extent.getCenter(zoomOutExtent));
 
-  mapView.setZoom(mapView.getZoom() - 1);
-});
+//   mapView.setZoom(mapView.getZoom() - 1);
+// });
 
-var zoButton = document.createElement("button");
-zoButton.innerHTML =
-  '<img src="/resources/images/zoom_out.svg" alt="" class="myImg" />';
-zoButton.className = "myButton";
-zoButton.id = "zoButtonDiv";
-zoButton.title = "Zoom Out";
+// var zoButton = document.createElement("button");
+// zoButton.innerHTML =
+//   '<img src="/resources/images/zoom_out.svg" alt="" class="myImg" />';
+// zoButton.className = "myButton";
+// zoButton.id = "zoButtonDiv";
+// zoButton.title = "Zoom Out";
 
-var zoElement = document.createElement("div");
-zoElement.className = "myButtonDiv";
-zoElement.appendChild(zoButton);
-toolbarDivElement.appendChild(zoElement);
+// var zoElement = document.createElement("div");
+// zoElement.className = "myButtonDiv";
+// zoElement.appendChild(zoButton);
+// toolbarDivElement.appendChild(zoElement);
 
-var zoomOutFlag = false;
-zoButton.addEventListener("click", () => {
-  zoButton.classList.toggle("clicked");
-  zoomOutFlag = !zoomOutFlag;
-  if (zoomOutFlag) {
-    document.getElementById("map").style.cursor = "zoom-out";
-    map.addInteraction(zoomOutInteraction);
-  } else {
-    map.removeInteraction(zoomOutInteraction);
-    document.getElementById("map").style.cursor = "default";
-  }
-});
+// var zoomOutFlag = false;
+// zoButton.addEventListener("click", () => {
+//   zoButton.classList.toggle("clicked");
+//   zoomOutFlag = !zoomOutFlag;
+//   if (zoomOutFlag) {
+//     document.getElementById("map").style.cursor = "zoom-out";
+//     map.addInteraction(zoomOutInteraction);
+//   } else {
+//     map.removeInteraction(zoomOutInteraction);
+//     document.getElementById("map").style.cursor = "default";
+//   }
+// });
 
-//ADDING ALL TOOLBAR CONTROLS
-var allControl = new ol.control.Control({
-  element: toolbarDivElement,
-});
-map.addControl(allControl);
+// //ADDING ALL TOOLBAR CONTROLS
+// var allControl = new ol.control.Control({
+//   element: toolbarDivElement,
+// });
+// map.addControl(allControl);
 
 // // POINT MARKER TOOLBAR
 // var pointMarkerFlag = false;
