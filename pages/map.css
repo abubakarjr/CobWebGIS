@@ -322,12 +322,12 @@
     display: none;
     margin: 65px auto auto 45px;
     width: 250px;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(18, 3, 3, 0.8);
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 1em;
     line-height: 1.45;
     border-radius: 2px;
-    border: 1px solid #d1d1d1;
+    border: 1px solid #d31919;
     box-shadow: 2px 3px 2px rgba(0, 0, 0, 0.5);
     z-index: 1;
   }
@@ -336,15 +336,16 @@
     display: none;
   }
   
-  .layer-switcher {
+  /* .layer-switcher {
     position: absolute;
+    color: #000;
     top: 0px;
     right: 0px;
   }
 
   .layer-switcher ul {
     margin: 1em 0.4em;
-  }
+  } */
 
 
 /* #headerDiv{
@@ -584,7 +585,7 @@ table {
 table,
 th,
 td {
-  border: 1px solid #ddd;
+  border: 2px solid #fff;
   color: #fff;
 }
 
@@ -628,8 +629,9 @@ p {
 
 label {
   display: block;
-  margin-bottom: 0px;
-  color: #fff;
+  margin: 0px;
+  padding: 0;
+  /* color: #fff; */
 }
 
 textarea {
