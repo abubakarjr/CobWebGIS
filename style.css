@@ -113,8 +113,7 @@
     padding: 0;
     margin: 1px;
     border: solid 3px #201344;
-    background: #fff;
-    /* background: linear-gradient(to bottom, #175d69 23%, #330c43 95%); */
+    background: linear-gradient(to bottom, #175d69 23%, #330c43 95%);
   }
   
   /* Aside style */
