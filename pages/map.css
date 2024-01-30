@@ -442,7 +442,6 @@
   border: 2px solid rgb(18, 1, 1);
   border-radius: 5px;
   padding: 5px;
-  color: #fff;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   /* border: 1px solid rgba(255, 255, 255, 0.18); */
