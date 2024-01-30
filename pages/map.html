@@ -177,8 +177,39 @@
 
       <!-- Aside 1 -->
       <aside class="aside aside1 hidden">
-        <!-- AUTO CONVERTER -->
-        <label for="area"><strong>Converter</strong></label>
+        <div class="coodctn">
+          <h1>Coordinates Calc</h1>
+          <div id="coordinates">
+            <!-- <label for="coordinateInput">Coordinates Calc</label> -->
+            <textarea
+              id="coordinateInput"
+              rows="5"
+              placeholder="Latitude1, Longitude1&#10;Latitude2, Longitude2&#10;Latitude3, Longitude3"
+            ></textarea>
+          </div>
+          <p id="result1"></p>
+
+          <!-- <div>
+            <label for="coordinatesInput">Enter Coordinates (latitude, longitude):</label>
+            <textarea id="coordinatesInput" rows="3" placeholder="e.g., 40.7128, -74.0060"></textarea>
+        
+            <button id="addPointBtn">Add Point</button>
+            <button id="measureDistanceBtn">Measure Distance</button>
+            <button id="measureAreaBtn">Measure Area</button>
+          </div>
+        </div> -->
+
+      </aside>
+      <!-- Aside 2 -->
+      <aside class="aside aside2 hidden">
+        <div id="conversion-form">
+          <h1 class="survres">Result</h1>
+          <div id="measurementResults">
+            <p id="lengthResult"></p>
+            <p id="areaResult"></p>
+          </div>
+          <!-- AUTO CONVERTER -->
+        <!-- <label for="area"><strong>Converter</strong></label> -->
         <div class="input-container">
           <input type="number" id="area" placeholder="Enter area (sqm)" />
         </div>
@@ -190,48 +221,7 @@
           <option value="medens">Medium Density Area</option>
           <option value="lodens">Low Density Area</option>
         </select>
-        <div class="coodctn">
-          <h1>Coordinates Calc</h1>
-
-          <div id="coordinates">
-            <!-- <label for="coordinateInput">Coordinates Calc</label> -->
-            <textarea
-              id="coordinateInput"
-              rows="5"
-              placeholder="Latitude1, Longitude1&#10;Latitude2, Longitude2&#10;Latitude3, Longitude3"
-            ></textarea>
-            <button class="coodbtn" onclick="calculateArea()">Area</button>
-          </div>
-        </div>
-      </aside>
-
-      <!-- Aside 2 -->
-      <aside class="aside aside2 hidden">
-        <div id="conversion-form">
-          <h1 class="survres">Result</h1>
-          <div id="measurementResults">
-            <p id="lengthResult"></p>
-            <p id="areaResult"></p>
-          </div>
-
-          <!-- <br />
-          <label for="area">Converter</label>
-          <div class="input-container">
-            <input type="number" id="area" placeholder="Enter area (sqm)" />
-          </div>
-
-          <br />
-
-          <label for="dense">Plot Density Table</label>
-          <select id="dense">
-            <option value="hidens">Selece Plot Density</option>
-            <option value="hidens">High Density Area</option>
-            <option value="medens">Medium Density Area</option>
-            <option value="lodens">Low Density Area</option>
-          </select> -->
-
           <div id="result"></div>
-          <p id="result1"></p>
         </div>
       </aside>
 

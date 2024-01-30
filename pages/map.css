@@ -546,13 +546,19 @@
 
 /* CONVERTER */
 #conversion-form {
-  background-color: #fff;
-  padding: 10px;
+  /* background: linear-gradient(to bottom, #175d69 23%, #330c43 95%); */
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  padding: 0px;
+  margin: auto; /* Center the card on the page */
 }
 
 label {
+  /* background: linear-gradient(to bottom, #175d69 23%, #330c43 95%); */
   display: block;
   margin-bottom: 8px;
 }
@@ -579,6 +585,7 @@ table,
 th,
 td {
   border: 1px solid #ddd;
+  color: #fff;
 }
 
 th,
@@ -587,23 +594,27 @@ td {
   text-align: left;
 }
 
-th {
+/* th {
   background-color: #f2f2f2;
-}
+} */
 
 /* COORDINATE CONVERTER */
 .coodctn {
-  background-color: #fff;
-  padding: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-}
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    padding: 5px;
+    margin: auto; /* Center the card on the page */
+  }
 
 h1 {
   text-align: center;
   font-size: large;
   margin: 0;
-  color: #333;
+  color: #fff;
 }
 
 p {
@@ -611,20 +622,24 @@ p {
 }
 
 #coordinates {
-  margin-top: 20px;
+  margin: 5px;
+  padding: 5px;
 }
 
 label {
   display: block;
   margin-bottom: 0px;
-  color: #333;
+  color: #fff;
 }
 
 textarea {
+  background: transparent;
+  color: #fff;
   width: 100%;
   padding: 2px;
   box-sizing: border-box;
   margin-bottom: 10px;
+  border-radius: 5px;
 }
 
 .coodbtn {

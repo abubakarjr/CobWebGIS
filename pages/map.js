@@ -553,7 +553,7 @@ function toggleZoomOutInteraction() {
   zoomOutActive = !zoomOutActive;
 }
 
-// *****************************************************
+// *****POINT MARKER, DISTANCE AND AREA MEASUREMENTS ********
 document.getElementById("lengthBtn").addEventListener("click", function () {
   changeMeasurementType("LineString");
 });
@@ -883,6 +883,372 @@ function clearSelectedFeature() {
   source.clear();
 }
 // *****************************************************
+const areaInput = document.getElementById("area");
+const denseSelect = document.getElementById("dense");
+
+denseSelect.addEventListener("change", convertAndDisplay);
+areaInput.addEventListener("input", convertAndDisplay);
+
+function convertAndDisplay() {
+  const area = parseFloat(areaInput.value) || 0;
+  const state = denseSelect.value;
+
+  let plotSize;
+
+  switch (state) {
+    default:
+      //plotSize = 15 * 30; // High Density Area
+      break;
+
+    case "hidens":
+      plotSize = 15 * 30; // High Density Area
+      break;
+
+    case "medens":
+      plotSize = 20 * 30; // Medium Density Area
+      break;
+
+    case "lodens":
+      plotSize = 30 * 40; // Low Density Area
+      break;
+  }
+
+  const acres = area * 0.000247105;
+  const hectares = area * 0.0001;
+  const plotsInSquareFeet = area / plotSize;
+
+  const areaInMeters = area.toFixed(2) + " m²";
+  const areaInFeet = (area * 10.7639).toFixed(2) + " ft²";
+
+  let output;
+
+  if (area > 10000) {
+    output = Math.round((area / 1000000) * 100) / 100 + " km²";
+  } else {
+    output = areaInMeters;
+  }
+
+  const resultHTML = `
+    <table>
+      <tr>
+        <th>Property</th>
+        <th>Value</th>
+      </tr>
+      <tr>
+        <td>Area</td>
+        <td>${output}</td>
+      </tr>
+      <tr>
+        <td>Acres</td>
+        <td>${acres.toFixed(2)}</td>
+      </tr>
+      <tr>
+        <td>Hectares</td>
+        <td>${hectares.toFixed(2)}</td>
+      </tr>
+      <tr>
+        <td>Plots in Sq. ft</td>
+        <td>${plotsInSquareFeet.toFixed(2)}</td>
+      </tr>
+      <tr>
+        <td>Dimensions</td>
+        <td>${getPlotDimensions(state)}</td>
+      </tr>
+    </table>
+  `;
+
+  document.getElementById("result").innerHTML = resultHTML;
+}
+
+function getPlotDimensions(state) {
+  switch (state) {
+    default:
+      return "Select Plot Density";
+    case "hidens":
+      return "15 X 30m"; // High Density Area
+    case "medens":
+      return "20 X 30m"; // Medium Density Area
+    case "lodens":
+      return "30 X 40m"; // Low Density Area
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const areaInput = document.getElementById("area");
+  const denseSelect = document.getElementById("dense");
+
+  // Removed the pasteFromClipboard function from the event listener
+  denseSelect.addEventListener("change", convertAndDisplay);
+
+  // Added event listener for input changes in the areaInput
+  areaInput.addEventListener("input", convertAndDisplay);
+});
+
+//******************COORDINATE CALCULATOR********************//
+document
+  .getElementById("coordinateInput")
+  .addEventListener("input", function () {
+    // Delay the execution to allow the user to finish typing
+    clearTimeout(this.timer);
+    this.timer = setTimeout(calculateArea, 500); // Adjust the delay as needed
+  });
+
+function calculateArea() {
+  const coordinatesInput = document
+    .getElementById("coordinateInput")
+    .value.trim();
+
+  // Check if input is not empty
+  if (coordinatesInput === "") {
+    // Clear the result if no coordinates are provided
+    clearResults();
+    return;
+  }
+
+  const coordinatePairs = coordinatesInput.split(/\n|\r\n/);
+
+  if (coordinatePairs.length >= 2) {
+    // Trigger the calculation functions
+    const latitudes = [];
+    const longitudes = [];
+
+    coordinatePairs.forEach((pair) => {
+      const [latInput, lonInput] = pair.split(",");
+      const lat = parseFloat(latInput);
+      const lon = parseFloat(lonInput);
+
+      if (!isNaN(lat) && !isNaN(lon)) {
+        latitudes.push(lat);
+        longitudes.push(lon);
+      }
+    });
+
+    // Calculate the total distance between consecutive coordinates
+    const totalDistance = calculateTotalDistance(latitudes, longitudes);
+
+    // Convert distance to kilometers, meters, and feet
+    const conversionFactorKm = 1; // 1 kilometer is 1 kilometer
+    const conversionFactorM = 1000; // 1 kilometer is 1000 meters
+    const conversionFactorFt = 3280.84; // 1 kilometer is approximately 3280.84 feet
+
+    const totalDistanceKm = totalDistance / conversionFactorKm;
+    const totalDistanceM = totalDistance * conversionFactorM;
+    const totalDistanceFt = totalDistance * conversionFactorFt;
+
+    // Calculate the area using the provided code
+    const areaOutput = calculatePolygonArea(latitudes, longitudes);
+    const areaSquareKm = areaOutput / 1e6; // Convert square meters to square kilometers
+
+    // Convert area to square meters and square feet
+    const areaSquareM = areaOutput;
+    const areaSquareFt = areaOutput * 10.7639; // Convert square meters to square feet
+
+    // Create a table to display the results
+    const resultElement = document.getElementById("result1");
+    resultElement.innerHTML = `
+      <table>
+        <tr>
+          <th>Measurement</th>
+          <th>Result</th>
+        </tr>
+        <tr>
+          <td>Area (Sq. Km)</td>
+          <td>${areaSquareKm.toFixed(2)}</td>
+        </tr>
+        <tr>
+          <td>Area (Sq. M)</td>
+          <td>${areaSquareM.toFixed(2)}</td>
+        </tr>
+        <tr>
+          <td>Area (Sq. Ft)</td>
+          <td>${areaSquareFt.toFixed(2)}</td>
+        </tr>
+        <tr>
+          <td>Distance (Km)</td>
+          <td>${totalDistanceKm.toFixed(2)}</td>
+        </tr>
+        <tr>
+          <td>Distance (M)</td>
+          <td>${totalDistanceM.toFixed(2)}</td>
+        </tr>
+        <tr>
+          <td>Distance (Ft)</td>
+          <td>${totalDistanceFt.toFixed(2)}</td>
+        </tr>
+      </table>`;
+  } else {
+    // Clear the result if less than two coordinates are provided
+    clearResults();
+  }
+}
+
+function clearResults() {
+  // Clear the results when there are less than two coordinates
+  const resultElement = document.getElementById("result1");
+  resultElement.innerHTML = "";
+}
+
+function calculateTotalDistance(latitudes, longitudes) {
+  let totalDistance = 0;
+  for (let i = 0; i < latitudes.length - 1; i++) {
+    totalDistance += calculateSphericalDistance(
+      latitudes[i],
+      longitudes[i],
+      latitudes[i + 1],
+      longitudes[i + 1]
+    );
+  }
+  return totalDistance;
+}
+
+function calculateSphericalDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Radius of the Earth in kilometers
+  const dLat = toRadians(lat2 - lat1);
+  const dLon = toRadians(lon2 - lon1);
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRadians(lat1)) *
+      Math.cos(toRadians(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  const distance = R * c;
+  return distance;
+}
+
+function toRadians(degrees) {
+  return degrees * (Math.PI / 180);
+}
+
+function calculatePolygonArea(latitudes, longitudes) {
+  const coordinates = latitudes.map((lat, index) => [longitudes[index], lat]);
+
+  const polygon = new ol.geom.Polygon([coordinates]);
+  const areaOutput = calculateAreaValue(polygon);
+  return areaOutput;
+}
+
+function calculateAreaValue(polygon) {
+  const area = ol.sphere.getArea(polygon, {
+    projection: mapView.getProjection(),
+  });
+  return area;
+}
+// *****************************************************
+// document.getElementById("addPointBtn").addEventListener("click", function () {
+//   addPointFromInput();
+// });
+
+// document
+//   .getElementById("measureDistanceBtn")
+//   .addEventListener("click", function () {
+//     measureDistanceFromInput();
+//   });
+
+// document
+//   .getElementById("measureAreaBtn")
+//   .addEventListener("click", function () {
+//     measureAreaFromInput();
+//   });
+
+// function addPointFromInput() {
+//   const coordinatesInput = document.getElementById("coordinatesInput").value;
+//   if (coordinatesInput) {
+//     const [longitude, latitude] = coordinatesInput
+//       .split(",")
+//       .map((coord) => parseFloat(coord.trim()));
+
+//     if (!isNaN(latitude) && !isNaN(longitude)) {
+//       const pointFeature = new ol.Feature({
+//         geometry: new ol.geom.Point([longitude, latitude]),
+//       });
+
+//       source.addFeature(pointFeature);
+
+//       // Set the correct style for points
+//       vector.setStyle(pointStyle);
+//     } else {
+//       alert("Invalid coordinates. Please enter valid latitude and longitude.");
+//     }
+//   } else {
+//     alert("Please enter coordinates before adding a point.");
+//   }
+// }
+
+// function measureDistanceFromInput() {
+//   const coordinatesInput = document.getElementById("coordinatesInput").value;
+//   if (coordinatesInput) {
+//     const coordinatesArray = coordinatesInput
+//       .split(",")
+//       .map((coord) => parseFloat(coord.trim()));
+
+//     if (coordinatesArray.length >= 4 && coordinatesArray.length % 2 === 0) {
+//       const coordinates = coordinatesArray.reduce((acc, val, index) => {
+//         if (index % 2 === 0) {
+//           acc.push([coordinatesArray[index + 1], val]);
+//         }
+//         return acc;
+//       }, []);
+
+//       const lineString = new ol.geom.LineString(coordinates);
+//       const lineFeature = new ol.Feature(lineString);
+
+//       source.addFeature(lineFeature);
+
+//       const lengthOutput = formatLength(lineString);
+//       document.getElementById("lengthResult").textContent =
+//         "Total Distance Covered: " + lengthOutput;
+
+//       document.getElementById("areaResult").textContent = "";
+//     } else {
+//       alert(
+//         "Invalid coordinates. Please enter at least two pairs of latitude and longitude for measuring distance."
+//       );
+//     }
+//   } else {
+//     alert("Please enter coordinates before measuring distance.");
+//   }
+// }
+
+// function measureAreaFromInput() {
+//   const coordinatesInput = document.getElementById("coordinatesInput").value;
+//   if (coordinatesInput) {
+//     const coordinatesArray = coordinatesInput
+//       .split(",")
+//       .map((coord) => parseFloat(coord.trim()));
+
+//     if (coordinatesArray.length >= 6 && coordinatesArray.length % 2 === 0) {
+//       const coordinates = coordinatesArray.reduce((acc, val, index) => {
+//         if (index % 2 === 0) {
+//           acc.push([coordinatesArray[index + 1], val]);
+//         }
+//         return acc;
+//       }, []);
+
+//       coordinates.push(coordinates[0]); // Close the polygon
+
+//       const polygon = new ol.geom.Polygon([coordinates]);
+//       const polygonFeature = new ol.Feature(polygon);
+
+//       source.addFeature(polygonFeature);
+
+//       const areaOutput = formatArea(polygon);
+//       document.getElementById("areaResult").textContent =
+//         "Total Area Covered: " + areaOutput;
+
+//       document.getElementById("lengthResult").textContent = "";
+//     } else {
+//       alert(
+//         "Invalid coordinates. Please enter at least three pairs of latitude and longitude for measuring area."
+//       );
+//     }
+//   } else {
+//     alert("Please enter coordinates before measuring area.");
+//   }
+// }
 
 // *****************************************************
 
@@ -1426,247 +1792,3 @@ function clearSelectedFeature() {
 // };
 
 //------------------------------------------
-const areaInput = document.getElementById("area");
-const denseSelect = document.getElementById("dense");
-
-denseSelect.addEventListener("change", convertAndDisplay);
-areaInput.addEventListener("input", convertAndDisplay);
-
-function convertAndDisplay() {
-  const area = parseFloat(areaInput.value) || 0;
-  const state = denseSelect.value;
-
-  let plotSize;
-
-  switch (state) {
-    default:
-      //plotSize = 15 * 30; // High Density Area
-      break;
-
-    case "hidens":
-      plotSize = 15 * 30; // High Density Area
-      break;
-
-    case "medens":
-      plotSize = 20 * 30; // Medium Density Area
-      break;
-
-    case "lodens":
-      plotSize = 30 * 40; // Low Density Area
-      break;
-  }
-
-  const acres = area * 0.000247105;
-  const hectares = area * 0.0001;
-  const plotsInSquareFeet = area / plotSize;
-
-  const areaInMeters = area.toFixed(2) + " m²";
-  const areaInFeet = (area * 10.7639).toFixed(2) + " ft²";
-
-  let output;
-
-  if (area > 10000) {
-    output = Math.round((area / 1000000) * 100) / 100 + " km²";
-  } else {
-    output = areaInMeters;
-  }
-
-  const resultHTML = `
-    <table>
-      <tr>
-        <th>Property</th>
-        <th>Value</th>
-      </tr>
-      <tr>
-        <td>Area</td>
-        <td>${output}</td>
-      </tr>
-      <tr>
-        <td>Acres</td>
-        <td>${acres.toFixed(2)}</td>
-      </tr>
-      <tr>
-        <td>Hectares</td>
-        <td>${hectares.toFixed(2)}</td>
-      </tr>
-      <tr>
-        <td>Plots in Sq. ft</td>
-        <td>${plotsInSquareFeet.toFixed(2)}</td>
-      </tr>
-      <tr>
-        <td>Dimensions</td>
-        <td>${getPlotDimensions(state)}</td>
-      </tr>
-    </table>
-  `;
-
-  document.getElementById("result").innerHTML = resultHTML;
-}
-
-function getPlotDimensions(state) {
-  switch (state) {
-    default:
-      return "Select Plot Density";
-    case "hidens":
-      return "15 X 30m"; // High Density Area
-    case "medens":
-      return "20 X 30m"; // Medium Density Area
-    case "lodens":
-      return "30 X 40m"; // Low Density Area
-  }
-}
-
-document.addEventListener("DOMContentLoaded", function () {
-  const areaInput = document.getElementById("area");
-  const denseSelect = document.getElementById("dense");
-
-  // Removed the pasteFromClipboard function from the event listener
-  denseSelect.addEventListener("change", convertAndDisplay);
-
-  // Added event listener for input changes in the areaInput
-  areaInput.addEventListener("input", convertAndDisplay);
-});
-
-//------------------------------------------
-// end : Length and Area Measurement Control
-
-//COORDINATE CALCULATOR------------------//
-function calculateArea() {
-  const coordinatesInput = document
-    .getElementById("coordinateInput")
-    .value.trim();
-
-  // Check if input is not empty
-  if (coordinatesInput === "") {
-    // alert("Please enter coordinates.");
-    return;
-  }
-
-  const coordinatePairs = coordinatesInput.split(/\n|\r\n/);
-
-  const latitudes = [];
-  const longitudes = [];
-
-  coordinatePairs.forEach((pair) => {
-    const [latInput, lonInput] = pair.split(",");
-
-    const lat = parseFloat(latInput);
-    const lon = parseFloat(lonInput);
-
-    // Check if inputs are valid numbers
-    if (isNaN(lat) || isNaN(lon)) {
-      // alert("Please enter valid numbers for coordinates.");
-      return;
-    }
-
-    latitudes.push(lat);
-    longitudes.push(lon);
-  });
-
-  // Calculate the area (Assuming a convex polygon)
-  const areaSquareDegrees = calculatePolygonArea(latitudes, longitudes);
-
-  // Convert square degrees to square kilometers, square meters, and square feet
-  const conversionFactorKm2 = 111; // Approximate conversion factor for square kilometers
-  const conversionFactorM2 = 111000; // Approximate conversion factor for square meters
-  const conversionFactorFt2 = 364000; // Approximate conversion factor for square feet
-
-  const areaSquareKm = areaSquareDegrees / conversionFactorKm2;
-  const areaSquareM = areaSquareDegrees * conversionFactorM2;
-  const areaSquareFt = areaSquareDegrees * conversionFactorFt2;
-
-  // Calculate the total distance between consecutive coordinates
-  const totalDistance = calculateTotalDistance(latitudes, longitudes);
-
-  // Convert distance to kilometers, meters, and feet
-  const conversionFactorKm = 1; // 1 kilometer is 1 kilometer
-  const conversionFactorM = 1000; // 1 kilometer is 1000 meters
-  const conversionFactorFt = 3280.84; // 1 kilometer is approximately 3280.84 feet
-
-  const totalDistanceKm = totalDistance / conversionFactorKm;
-  const totalDistanceM = totalDistance * conversionFactorM;
-  const totalDistanceFt = totalDistance * conversionFactorFt;
-
-  // Create a table to display the results
-  const resultElement = document.getElementById("result1");
-  resultElement.innerHTML = `
-    <table>
-      <tr>
-        <th>Measurement</th>
-        <th>Result</th>
-      </tr>
-      <tr>
-        <td>Area (Sq. Km)</td>
-        <td>${areaSquareKm.toFixed(2)}</td>
-      </tr>
-      <tr>
-        <td>Area (Sq. M)</td>
-        <td>${areaSquareM.toFixed(2)}</td>
-      </tr>
-      <tr>
-        <td>Area (Sq. Ft)</td>
-        <td>${areaSquareFt.toFixed(2)}</td>
-      </tr>
-      <tr>
-        <td>Distance (Km)</td>
-        <td>${totalDistanceKm.toFixed(2)}</td>
-      </tr>
-      <tr>
-        <td>Distance (M)</td>
-        <td>${totalDistanceM.toFixed(2)}</td>
-      </tr>
-      <tr>
-        <td>Distance (Ft)</td>
-        <td>${totalDistanceFt.toFixed(2)}</td>
-      </tr>
-    </table>`;
-}
-
-function calculatePolygonArea(latitudes, longitudes) {
-  const numPoints = latitudes.length;
-
-  let area = 0;
-  for (let i = 0; i < numPoints; i++) {
-    const j = (i + 1) % numPoints;
-    area += latitudes[i] * longitudes[j];
-    area -= latitudes[j] * longitudes[i];
-  }
-
-  area = Math.abs(area) / 2;
-  return area;
-}
-
-function calculateTotalDistance(latitudes, longitudes) {
-  let totalDistance = 0;
-  for (let i = 0; i < latitudes.length - 1; i++) {
-    totalDistance += calculateSphericalDistance(
-      latitudes[i],
-      longitudes[i],
-      latitudes[i + 1],
-      longitudes[i + 1]
-    );
-  }
-  return totalDistance;
-}
-
-function calculateSphericalDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371; // Radius of the Earth in kilometers
-  const dLat = toRadians(lat2 - lat1);
-  const dLon = toRadians(lon2 - lon1);
-
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRadians(lat1)) *
-      Math.cos(toRadians(lat2)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-  const distance = R * c;
-  return distance;
-}
-
-function toRadians(degrees) {
-  return degrees * (Math.PI / 180);
-}

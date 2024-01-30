@@ -123,6 +123,8 @@
     height: 77vh;
     border: solid 3px #201344;
     display: none;
+    /* background: #0f0f0f; */
+    background: linear-gradient(to bottom, #175d69 23%, #330c43 95%);
   }
 
   .aside.hidden {
