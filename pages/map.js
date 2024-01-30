@@ -576,7 +576,7 @@ const style = new ol.style.Style({
     color: "rgba(255, 255, 255, 0.2)",
   }),
   stroke: new ol.style.Stroke({
-    color: "#000",
+    color: "blue",
     lineDash: [10, 10],
     width: 4,
   }),
