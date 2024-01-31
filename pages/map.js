@@ -192,7 +192,7 @@ $("#livelocation").on("click", function (event) {
 });
 
 map.on("moveend", function (event) {
-  if (isTracking) {
+  if (isTracking && $("#livelocation").hasClass("clicked")) {
     // If tracking is active and the map is manually moved, stop tracking
     isTracking = false;
     clearInterval(intervalAutolocate);
