@@ -59,15 +59,7 @@
           <button id="livelocation" title="Live Location">
             <img class="livelocation" src="/resources/images/crosshairs.svg" alt="">
           </button>
-
-          <!-- Location search -->
-          <div>
-            <label class="search" for="inpt_search">
-              <input id="inpt_search" type="text" />
-              <div id="suggestions-container"></div>
-            </label>
-          </div>
-
+          
           <!-- Popup -->
           <div id="popup" class="ol-popup">
             <a href="#" id="popup-closer" class="ol-popup-closer"></a>
@@ -78,7 +70,15 @@
           <div id="rotateBtn" class="rotate-control ol-unselectable ol-control">
             <img title="Compass" id="rotateIcon" src="/resources/images/compass.svg" alt="Rotate" />
           </div>
-                                                                                 
+
+          <!-- Location Search -->
+          <div>
+            <label class="search" for="inpt_search">
+              <input id="inpt_search" type="text" />
+              <div id="suggestions-container"></div>
+            </label>
+          </div>
+
           <!-- Measurement Controls -->
           <div id="measurement-controls" class="measurement-controls">
             <div id="type">
@@ -193,7 +193,6 @@
             <input type="number" id="area" placeholder="Enter area (sqm)" />
           </div>
           <br />
-          <!-- <label for="dense">Plot Density Table</label> -->
           <select id="dense">
             <option value="hidens">Selece Plot Density</option>
             <option value="hidens">High Density Area</option>

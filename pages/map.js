@@ -1,4 +1,4 @@
-// Define the initial view for the map
+//------------------MAP INITIATION--------------------//
 var mapView = new ol.View({
   center: ol.proj.fromLonLat([7.442544, 10.542135]),
   zoom: 20,
@@ -28,7 +28,9 @@ var map = new ol.Map({
     new ol.control.LayerSwitcher(),
   ],
 });
+//------------------MAP INITIATION--------------------//
 
+//----------------------LAYERS-----------------------//
 // Bing Maps Satellite
 var bingSatellite = new ol.layer.Tile({
   title: "Bing Satellite",
@@ -113,8 +115,9 @@ var baseGroup = new ol.layer.Group({
   ],
 });
 map.addLayer(baseGroup);
+//----------------------LAYERS-----------------------//
 
-// ------------------LIVE LOCATION-------------------//
+//------------------LIVE LOCATION-------------------//
 var geolocation = new ol.Geolocation({
   trackingOptions: {
     enableHighAccuracy: true,
@@ -210,10 +213,9 @@ map.on("moveend", function (event) {
     $("#livelocation").removeClass("clicked");
   }
 });
+//------------------LIVE LOCATION-------------------//
 
-// ------------------LIVE LOCATION-------------------//
-
-// ----------------------COMPASS --------------------//
+//----------------------COMPASS --------------------//
 // Define an initial rotation value
 let initialRotation = 0;
 
@@ -278,9 +280,9 @@ const overlay = new ol.Overlay({
     },
   },
 });
-// ----------------------COMPASS ---------------------------
+//----------------------COMPASS -------------------//
 
-// -------------------------POPUP-------------------//
+//-------------------------POPUP-------------------//
 // Add a click handler to hide the popup.
 closer.onclick = function () {
   overlay.setPosition(undefined);
@@ -350,9 +352,9 @@ function togglePopupInteraction() {
 toggleBtn.onclick = function () {
   togglePopupInteraction();
 };
-// -------------------------POPUP-------------------//
+//-------------------------POPUP-------------------//
 
-// -----------------LOCATION SEARCH-----------------------
+//-----------------LOCATION SEARCH-----------------//
 var bingApiKey =
   "AstqSWN2XWpS7yTd1GQ6mSp6ADE-IFOaLveo30y7PhE2iz7CDA8nvsvO-3YsEeXF";
 var mapboxApiKey =
@@ -502,90 +504,9 @@ function handleSuggestionClick(suggestion) {
     coordinates
   );
 }
+//-----------------LOCATION SEARCH-----------------//
 
-// // LIVE LOCATION
-// var intervalAutolocate;
-// var posCurrent;
-
-// var geolocation = new ol.Geolocation({
-//   trackingOptions: {
-//     enableHighAccuracy: true,
-//   },
-//   tracking: true,
-//   projection: map.getView().getProjection(), // Replace 'map' with your OpenLayers map variable
-// });
-
-// var positionFeature = new ol.Feature();
-// positionFeature.setStyle(
-//   new ol.style.Style({
-//     image: new ol.style.Circle({
-//       radius: 6,
-//       fill: new ol.style.Fill({
-//         color: "#3399CC",
-//       }),
-//       stroke: new ol.style.Stroke({
-//         color: "#fff",
-//         width: 2,
-//       }),
-//     }),
-//   })
-// );
-// var accuracyFeature = new ol.Feature();
-
-// var currentPositionLayer = new ol.layer.Vector({
-//   source: new ol.source.Vector({
-//     features: [accuracyFeature, positionFeature],
-//   }),
-// });
-
-// map.addLayer(currentPositionLayer); // Replace 'map' with your OpenLayers map variable
-
-// function startAutolocate() {
-//   var coordinates = geolocation.getPosition();
-//   positionFeature.setGeometry(
-//     coordinates ? new ol.geom.Point(coordinates) : null
-//   );
-//   map.getView().setCenter(coordinates);
-//   map.getView().setZoom(20); // Replace 'map' with your OpenLayers map variable
-//   accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
-//   intervalAutolocate = setInterval(function () {
-//     var coordinates = geolocation.getPosition();
-//     var accuracy = geolocation.getAccuracyGeometry();
-//     positionFeature.setGeometry(
-//       coordinates ? new ol.geom.Point(coordinates) : null
-//     );
-//     map.getView().setCenter(coordinates);
-//     map.getView().setZoom(16); // Replace 'map' with your OpenLayers map variable
-//     accuracyFeature.setGeometry(accuracy);
-//   }, 10000);
-// }
-
-// function stopAutolocate() {
-//   clearInterval(intervalAutolocate);
-//   positionFeature.setGeometry(null);
-//   accuracyFeature.setGeometry(null);
-// }
-// // LIVE LOCATION
-
-// // ONLOAD FUNCTIONS
-// $(function () {
-//   var toc = document.getElementById("livelocation");
-//   layerSwitcherControl = new ol.control.LayerSwitcher.renderPanel(map, toc, {
-//     reverse: false,
-//   });
-
-//   $("#livelocation").on("click", function (event) {
-//     $("#livelocation").toggleClass("clicked");
-//     if ($("#livelocation").hasClass("clicked")) {
-//       startAutolocate();
-//     } else {
-//       stopAutolocate();
-//     }
-//   });
-// });
-// // ONLOAD FUNCTIONS
-
-// ----------------FULL SCREEN CONTOL--------------------
+//----------------FULL SCREEN CONTOL--------------------//
 document.addEventListener("keydown", function (event) {
   if (event.key === "f" && (event.ctrlKey || event.metaKey)) {
     // Toggle fullscreen when Ctrl (or Cmd) + F is pressed
@@ -657,8 +578,9 @@ function toggleZoomOutInteraction() {
   }
   zoomOutActive = !zoomOutActive;
 }
+//----------------FULL SCREEN CONTOL--------------------//
 
-// *****POINT MARKER, DISTANCE AND AREA MEASUREMENTS ********
+//---POINT MARKER, DISTANCE AND AREA MEASUREMENTS---//
 document.getElementById("lengthBtn").addEventListener("click", function () {
   changeMeasurementType("LineString");
 });
@@ -987,7 +909,9 @@ function clearSelectedFeature() {
   modify.setActive(false);
   source.clear();
 }
-// *****************************************************
+//---POINT MARKER, DISTANCE AND AREA MEASUREMENTS---//
+
+//------------AUTO CONVERTER----------------------//
 const areaInput = document.getElementById("area");
 const denseSelect = document.getElementById("dense");
 
@@ -1088,8 +1012,9 @@ document.addEventListener("DOMContentLoaded", function () {
   // Added event listener for input changes in the areaInput
   areaInput.addEventListener("input", convertAndDisplay);
 });
+//------------AUTO CONVERTER----------------------//
 
-//******************COORDINATE CALCULATOR********************//
+//-------------COORDINATE CALCULATOR-------------------//
 document
   .getElementById("coordinateInput")
   .addEventListener("input", function () {
@@ -1242,6 +1167,90 @@ function calculateAreaValue(polygon) {
   });
   return area;
 }
+//-------------COORDINATE CALCULATOR-------------------//
+
+// // LIVE LOCATION
+// var intervalAutolocate;
+// var posCurrent;
+
+// var geolocation = new ol.Geolocation({
+//   trackingOptions: {
+//     enableHighAccuracy: true,
+//   },
+//   tracking: true,
+//   projection: map.getView().getProjection(), // Replace 'map' with your OpenLayers map variable
+// });
+
+// var positionFeature = new ol.Feature();
+// positionFeature.setStyle(
+//   new ol.style.Style({
+//     image: new ol.style.Circle({
+//       radius: 6,
+//       fill: new ol.style.Fill({
+//         color: "#3399CC",
+//       }),
+//       stroke: new ol.style.Stroke({
+//         color: "#fff",
+//         width: 2,
+//       }),
+//     }),
+//   })
+// );
+// var accuracyFeature = new ol.Feature();
+
+// var currentPositionLayer = new ol.layer.Vector({
+//   source: new ol.source.Vector({
+//     features: [accuracyFeature, positionFeature],
+//   }),
+// });
+
+// map.addLayer(currentPositionLayer); // Replace 'map' with your OpenLayers map variable
+
+// function startAutolocate() {
+//   var coordinates = geolocation.getPosition();
+//   positionFeature.setGeometry(
+//     coordinates ? new ol.geom.Point(coordinates) : null
+//   );
+//   map.getView().setCenter(coordinates);
+//   map.getView().setZoom(20); // Replace 'map' with your OpenLayers map variable
+//   accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
+//   intervalAutolocate = setInterval(function () {
+//     var coordinates = geolocation.getPosition();
+//     var accuracy = geolocation.getAccuracyGeometry();
+//     positionFeature.setGeometry(
+//       coordinates ? new ol.geom.Point(coordinates) : null
+//     );
+//     map.getView().setCenter(coordinates);
+//     map.getView().setZoom(16); // Replace 'map' with your OpenLayers map variable
+//     accuracyFeature.setGeometry(accuracy);
+//   }, 10000);
+// }
+
+// function stopAutolocate() {
+//   clearInterval(intervalAutolocate);
+//   positionFeature.setGeometry(null);
+//   accuracyFeature.setGeometry(null);
+// }
+// // LIVE LOCATION
+
+// // ONLOAD FUNCTIONS
+// $(function () {
+//   var toc = document.getElementById("livelocation");
+//   layerSwitcherControl = new ol.control.LayerSwitcher.renderPanel(map, toc, {
+//     reverse: false,
+//   });
+
+//   $("#livelocation").on("click", function (event) {
+//     $("#livelocation").toggleClass("clicked");
+//     if ($("#livelocation").hasClass("clicked")) {
+//       startAutolocate();
+//     } else {
+//       stopAutolocate();
+//     }
+//   });
+// });
+// // ONLOAD FUNCTIONS
+
 // *****************************************************
 // document.getElementById("addPointBtn").addEventListener("click", function () {
 //   addPointFromInput();

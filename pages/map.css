@@ -135,7 +135,7 @@
   content: "✖";
 }
 
-#bufferDistance {
+/* #bufferDistance {
   width: 100px;
 }
 
@@ -143,8 +143,9 @@
   width: 150px;
   margin: 0px auto 0px 20px;
   ;
-}
+} */
 
+/* MOUSE POSITION */
 .mousePosition {
   position: absolute;
   top: auto;
@@ -176,7 +177,6 @@
   border: 2px solid rgb(18, 1, 1);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  /* border: 1px solid rgba(255, 255, 255, 0.18); */
   border-radius: 5px;
   transition: all 200ms ease;
   transform: translateX(-50%);
@@ -196,7 +196,6 @@
   border-radius: 3px;
   transition: all 200ms ease;
 }
-
 
 .search:after {
   height: 0px;
