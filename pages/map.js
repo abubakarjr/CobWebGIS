@@ -114,6 +114,75 @@ var baseGroup = new ol.layer.Group({
 });
 map.addLayer(baseGroup);
 
+// LIVE LOCATION
+var posCurrent;
+var geolocation = new ol.Geolocation({
+  trackingOptions: {
+    enableHighAccuracy: true,
+  },
+  projection: map.getView().getProjection(),
+});
+
+var positionFeature = new ol.Feature();
+positionFeature.setStyle(
+  new ol.style.Style({
+    image: new ol.style.Circle({
+      radius: 6,
+      fill: new ol.style.Fill({
+        color: "#3399CC",
+      }),
+      stroke: new ol.style.Stroke({
+        color: "#fff",
+        width: 2,
+      }),
+    }),
+  })
+);
+
+var currentPositionLayer = new ol.layer.Vector({
+  source: new ol.source.Vector({
+    features: [positionFeature],
+  }),
+});
+
+map.addLayer(currentPositionLayer);
+
+function updateLiveLocation() {
+  var coordinates = geolocation.getPosition();
+  positionFeature.setGeometry(
+    coordinates ? new ol.geom.Point(coordinates) : null
+  );
+  map.getView().setCenter(coordinates);
+  map.getView().setZoom(16);
+}
+
+function startAutolocate() {
+  geolocation.setTracking(true);
+  geolocation.once("change:position", function () {
+    updateLiveLocation();
+    intervalAutolocate = setInterval(updateLiveLocation, 10000);
+  });
+}
+
+function stopAutolocate() {
+  clearInterval(intervalAutolocate);
+  geolocation.setTracking(false);
+  positionFeature.setGeometry(null);
+}
+
+$(function () {
+  $("#livelocation").on("click", function (event) {
+    $("#livelocation").toggleClass("clicked");
+    if ($("#livelocation").hasClass("clicked")) {
+      startAutolocate();
+    } else {
+      stopAutolocate();
+    }
+  });
+});
+// -------------------LIVE LOCATION------------------------
+
+// ----------------------COMPASS ---------------------------
 // Define an initial rotation value
 let initialRotation = 0;
 
@@ -178,7 +247,9 @@ const overlay = new ol.Overlay({
     },
   },
 });
+// ----------------------COMPASS ---------------------------
 
+// -------------------------POPUP-------------------//
 // Add a click handler to hide the popup.
 closer.onclick = function () {
   overlay.setPosition(undefined);
@@ -248,8 +319,9 @@ function togglePopupInteraction() {
 toggleBtn.onclick = function () {
   togglePopupInteraction();
 };
+// -------------------------POPUP-------------------//
 
-// LOCATION SEARCH
+// -----------------LOCATION SEARCH-----------------------
 var bingApiKey =
   "AstqSWN2XWpS7yTd1GQ6mSp6ADE-IFOaLveo30y7PhE2iz7CDA8nvsvO-3YsEeXF";
 var mapboxApiKey =
@@ -399,88 +471,90 @@ function handleSuggestionClick(suggestion) {
     coordinates
   );
 }
-//LIVE LOCATION
-var intervalAutolocate;
-var posCurrent;
 
-var geolocation = new ol.Geolocation({
-  trackingOptions: {
-    enableHighAccuracy: true,
-  },
-  tracking: true,
-  projection: mapView.getProjection(),
-});
+// // LIVE LOCATION
+// var intervalAutolocate;
+// var posCurrent;
 
-var positionFeature = new ol.Feature();
-positionFeature.setStyle(
-  new ol.style.Style({
-    image: new ol.style.Circle({
-      radius: 6,
-      fill: new ol.style.Fill({
-        color: "#3399CC",
-      }),
-      stroke: new ol.style.Stroke({
-        color: "#fff",
-        width: 2,
-      }),
-    }),
-  })
-);
-var accuracyFeature = new ol.Feature();
+// var geolocation = new ol.Geolocation({
+//   trackingOptions: {
+//     enableHighAccuracy: true,
+//   },
+//   tracking: true,
+//   projection: map.getView().getProjection(), // Replace 'map' with your OpenLayers map variable
+// });
 
-var currentPositionLayer = new ol.layer.Vector({
-  map: map,
-  source: new ol.source.Vector({
-    features: [accuracyFeature, positionFeature],
-  }),
-});
+// var positionFeature = new ol.Feature();
+// positionFeature.setStyle(
+//   new ol.style.Style({
+//     image: new ol.style.Circle({
+//       radius: 6,
+//       fill: new ol.style.Fill({
+//         color: "#3399CC",
+//       }),
+//       stroke: new ol.style.Stroke({
+//         color: "#fff",
+//         width: 2,
+//       }),
+//     }),
+//   })
+// );
+// var accuracyFeature = new ol.Feature();
 
-function startAutolocate() {
-  var coordinates = geolocation.getPosition();
-  positionFeature.setGeometry(
-    coordinates ? new ol.geom.Point(coordinates) : null
-  );
-  mapView.setCenter(coordinates);
-  mapView.setZoom(20);
-  accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
-  intervalAutolocate = setInterval(function () {
-    var coordinates = geolocation.getPosition();
-    var accuracy = geolocation.getAccuracyGeometry();
-    positionFeature.setGeometry(
-      coordinates ? new ol.geom.Point(coordinates) : null
-    );
-    map.getView().setCenter(coordinates);
-    mapView.setZoom(16);
-    accuracyFeature.setGeometry(accuracy);
-  }, 10000);
-}
+// var currentPositionLayer = new ol.layer.Vector({
+//   source: new ol.source.Vector({
+//     features: [accuracyFeature, positionFeature],
+//   }),
+// });
 
-function stopAutolocate() {
-  clearInterval(intervalAutolocate);
-  positionFeature.setGeometry(null);
-  accuracyFeature.setGeometry(null);
-}
-//LIVE LOCATION
+// map.addLayer(currentPositionLayer); // Replace 'map' with your OpenLayers map variable
 
-// ONLOAD FUNCTIONS
-$(function () {
-  var toc = document.getElementById("layerSwitcherContent");
-  layerSwitcherControl = new ol.control.LayerSwitcher.renderPanel(map, toc, {
-    reverse: false,
-  });
+// function startAutolocate() {
+//   var coordinates = geolocation.getPosition();
+//   positionFeature.setGeometry(
+//     coordinates ? new ol.geom.Point(coordinates) : null
+//   );
+//   map.getView().setCenter(coordinates);
+//   map.getView().setZoom(20); // Replace 'map' with your OpenLayers map variable
+//   accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
+//   intervalAutolocate = setInterval(function () {
+//     var coordinates = geolocation.getPosition();
+//     var accuracy = geolocation.getAccuracyGeometry();
+//     positionFeature.setGeometry(
+//       coordinates ? new ol.geom.Point(coordinates) : null
+//     );
+//     map.getView().setCenter(coordinates);
+//     map.getView().setZoom(16); // Replace 'map' with your OpenLayers map variable
+//     accuracyFeature.setGeometry(accuracy);
+//   }, 10000);
+// }
 
-  $("#btnCrosshair").on("click", function (event) {
-    $("#btnCrosshair").toggleClass("clicked");
-    if ($("#btnCrosshair").hasClass("clicked")) {
-      startAutolocate();
-    } else {
-      stopAutolocate();
-    }
-  });
-});
-// ONLOAD FUNCTIONS
+// function stopAutolocate() {
+//   clearInterval(intervalAutolocate);
+//   positionFeature.setGeometry(null);
+//   accuracyFeature.setGeometry(null);
+// }
+// // LIVE LOCATION
 
-// FULL SCREEN CONTOL
+// // ONLOAD FUNCTIONS
+// $(function () {
+//   var toc = document.getElementById("livelocation");
+//   layerSwitcherControl = new ol.control.LayerSwitcher.renderPanel(map, toc, {
+//     reverse: false,
+//   });
+
+//   $("#livelocation").on("click", function (event) {
+//     $("#livelocation").toggleClass("clicked");
+//     if ($("#livelocation").hasClass("clicked")) {
+//       startAutolocate();
+//     } else {
+//       stopAutolocate();
+//     }
+//   });
+// });
+// // ONLOAD FUNCTIONS
+
+// ----------------FULL SCREEN CONTOL--------------------
 document.addEventListener("keydown", function (event) {
   if (event.key === "f" && (event.ctrlKey || event.metaKey)) {
     // Toggle fullscreen when Ctrl (or Cmd) + F is pressed
