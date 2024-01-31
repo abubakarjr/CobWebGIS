@@ -1,7 +1,7 @@
 // Define the initial view for the map
 var mapView = new ol.View({
   center: ol.proj.fromLonLat([7.442544, 10.542135]),
-  zoom: 14,
+  zoom: 20,
 });
 
 var map = new ol.Map({
@@ -152,27 +152,62 @@ function updateLiveLocation() {
     coordinates ? new ol.geom.Point(coordinates) : null
   );
   map.getView().setCenter(coordinates);
-  map.getView().setZoom(16);
+  // map.getView().setZoom(16);
 }
 
 $(function () {
+  var isTracking = false;
+
   $("#livelocation").on("click", function (event) {
     $("#livelocation").toggleClass("clicked");
 
     if ($("#livelocation").hasClass("clicked")) {
+      isTracking = true;
+
       geolocation.setTracking(true);
       geolocation.once("change:position", function () {
         updateLiveLocation();
         intervalAutolocate = setInterval(updateLiveLocation, 10000);
       });
     } else {
+      isTracking = false;
       clearInterval(intervalAutolocate);
       geolocation.setTracking(false);
       positionFeature.setGeometry(null);
     }
   });
-});
 
+  // Use a more reliable event for mobile devices
+  $("#livelocation").on("touchstart", function (event) {
+    event.preventDefault();
+
+    $("#livelocation").toggleClass("clicked");
+
+    if ($("#livelocation").hasClass("clicked")) {
+      isTracking = true;
+
+      geolocation.setTracking(true);
+      geolocation.once("change:position", function () {
+        updateLiveLocation();
+        intervalAutolocate = setInterval(updateLiveLocation, 10000);
+      });
+    } else {
+      isTracking = false;
+      clearInterval(intervalAutolocate);
+      geolocation.setTracking(false);
+      positionFeature.setGeometry(null);
+    }
+  });
+
+  // Handle updates for mobile devices
+  if ("ontouchstart" in window || navigator.maxTouchPoints) {
+    setInterval(function () {
+      if (isTracking) {
+        updateLiveLocation();
+      }
+    }, 10000);
+  }
+});
 // ------------------LIVE LOCATION-------------------//
 
 // ----------------------COMPASS --------------------//
