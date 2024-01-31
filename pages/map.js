@@ -1,7 +1,7 @@
 //------------------MAP INITIATION--------------------//
 var mapView = new ol.View({
   center: ol.proj.fromLonLat([7.442544, 10.542135]),
-  zoom: 20,
+  zoom: 12,
 });
 
 var map = new ol.Map({
@@ -116,6 +116,84 @@ var baseGroup = new ol.layer.Group({
 });
 map.addLayer(baseGroup);
 //----------------------LAYERS-----------------------//
+
+// -------------------OVERLAY------------------------//
+var statesGeoJSONUrl = "/resources/overlays/ngastates.geojson";
+var lgasGeoJSONUrl = "/resources/overlays/ngalgas.geojson";
+var wardsGeoJSONUrl = "/resources/overlays/ngawards.geojson";
+
+// Function to create a GeoJSON layer
+function createGeoJSONLayer(geoJSONUrl, title, adminLevel) {
+  return new ol.layer.Vector({
+    title: title,
+    source: new ol.source.Vector({
+      url: geoJSONUrl,
+      format: new ol.format.GeoJSON(),
+    }),
+    style: function (feature) {
+      var featureAdminLevel = feature.get("admin_level");
+      var fillColor, strokeColor;
+
+      // Define styles based on the admin level
+      switch (featureAdminLevel) {
+        case "state":
+          fillColor = "rgba(255, 0, 0, 0.6)";
+          strokeColor = "#FF0000";
+          break;
+        case "lga":
+          fillColor = "rgba(0, 255, 0, 0.6)";
+          strokeColor = "#00FF00";
+          break;
+        case "ward":
+          fillColor = "rgba(0, 0, 255, 0.6)";
+          strokeColor = "#0000FF";
+          break;
+        default:
+          fillColor = "transparent";
+          strokeColor = "#319FD3";
+      }
+
+      return new ol.style.Style({
+        fill: new ol.style.Fill({
+          color: fillColor,
+        }),
+        stroke: new ol.style.Stroke({
+          color: strokeColor,
+          width: 1,
+        }),
+      });
+    },
+  });
+}
+
+// Create GeoJSON layers for states, LGAs, and wards
+var statesLayer = createGeoJSONLayer(
+  statesGeoJSONUrl,
+  "Nigeria States",
+  "state"
+);
+var lgasLayer = createGeoJSONLayer(lgasGeoJSONUrl, "Nigeria LGAs", "lga");
+var wardsLayer = createGeoJSONLayer(wardsGeoJSONUrl, "Nigeria Wards", "ward");
+
+// Create GeoJSON layers for states, LGAs, and wards
+var statesLayer = createGeoJSONLayer(
+  statesGeoJSONUrl,
+  "Nigeria States",
+  "state"
+);
+statesLayer.setVisible(false); // Set to false to hide by default
+
+var lgasLayer = createGeoJSONLayer(lgasGeoJSONUrl, "Nigeria LGAs", "lga");
+lgasLayer.setVisible(false); // Set to false to hide by default
+
+var wardsLayer = createGeoJSONLayer(wardsGeoJSONUrl, "Nigeria Wards", "ward");
+wardsLayer.setVisible(false); // Set to false to hide by default
+
+// Add GeoJSON layers to the map
+map.addLayer(statesLayer);
+map.addLayer(lgasLayer);
+map.addLayer(wardsLayer);
+// -------------------OVERLAY------------------------//
 
 //------------------LIVE LOCATION-------------------//
 var geolocation = new ol.Geolocation({

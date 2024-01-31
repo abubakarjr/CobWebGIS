@@ -145,6 +145,16 @@
   ;
 } */
 
+.overlay-title {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 /* MOUSE POSITION */
 .mousePosition {
   position: absolute;
