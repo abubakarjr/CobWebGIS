@@ -114,8 +114,7 @@ var baseGroup = new ol.layer.Group({
 });
 map.addLayer(baseGroup);
 
-// LIVE LOCATION
-var posCurrent;
+// ------------------LIVE LOCATION-------------------//
 var geolocation = new ol.Geolocation({
   trackingOptions: {
     enableHighAccuracy: true,
@@ -156,33 +155,27 @@ function updateLiveLocation() {
   map.getView().setZoom(16);
 }
 
-function startAutolocate() {
-  geolocation.setTracking(true);
-  geolocation.once("change:position", function () {
-    updateLiveLocation();
-    intervalAutolocate = setInterval(updateLiveLocation, 10000);
-  });
-}
-
-function stopAutolocate() {
-  clearInterval(intervalAutolocate);
-  geolocation.setTracking(false);
-  positionFeature.setGeometry(null);
-}
-
 $(function () {
   $("#livelocation").on("click", function (event) {
     $("#livelocation").toggleClass("clicked");
+
     if ($("#livelocation").hasClass("clicked")) {
-      startAutolocate();
+      geolocation.setTracking(true);
+      geolocation.once("change:position", function () {
+        updateLiveLocation();
+        intervalAutolocate = setInterval(updateLiveLocation, 10000);
+      });
     } else {
-      stopAutolocate();
+      clearInterval(intervalAutolocate);
+      geolocation.setTracking(false);
+      positionFeature.setGeometry(null);
     }
   });
 });
-// -------------------LIVE LOCATION------------------------
 
-// ----------------------COMPASS ---------------------------
+// ------------------LIVE LOCATION-------------------//
+
+// ----------------------COMPASS --------------------//
 // Define an initial rotation value
 let initialRotation = 0;
 
