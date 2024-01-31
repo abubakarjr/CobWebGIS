@@ -155,50 +155,62 @@ function updateLiveLocation() {
   // map.getView().setZoom(16);
 }
 
-$(function () {
-  var isTracking = false;
+var isTracking = false;
+var intervalAutolocate;
 
-  $("#livelocation").on("click", function (event) {
-    $("#livelocation").toggleClass("clicked");
+$("#livelocation").on("click", function (event) {
+  $("#livelocation").toggleClass("clicked");
 
-    if ($("#livelocation").hasClass("clicked")) {
-      isTracking = true;
+  if ($("#livelocation").hasClass("clicked")) {
+    isTracking = true;
 
-      geolocation.setTracking(true);
-      geolocation.once("change:position", function () {
-        updateLiveLocation();
-        intervalAutolocate = setInterval(updateLiveLocation, 10000);
-      });
-    } else {
-      isTracking = false;
-      clearInterval(intervalAutolocate);
-      geolocation.setTracking(false);
-      positionFeature.setGeometry(null);
-    }
-  });
+    geolocation.setTracking(true);
+    geolocation.once("change:position", function () {
+      updateLiveLocation();
+      intervalAutolocate = setInterval(updateLiveLocation, 10000);
+    });
 
-  // Use a more reliable event for mobile devices
-  $("#livelocation").on("touchstart", function (event) {
-    event.preventDefault();
+    // Disable map drag interaction
+    map.getInteractions().forEach(function (interaction) {
+      if (interaction instanceof ol.interaction.DragPan) {
+        interaction.setActive(false);
+      }
+    });
+  } else {
+    isTracking = false;
+    clearInterval(intervalAutolocate);
+    geolocation.setTracking(false);
+    positionFeature.setGeometry(null);
 
-    $("#livelocation").toggleClass("clicked");
-
-    if ($("#livelocation").hasClass("clicked")) {
-      isTracking = true;
-
-      geolocation.setTracking(true);
-      geolocation.once("change:position", function () {
-        updateLiveLocation();
-        intervalAutolocate = setInterval(updateLiveLocation, 10000);
-      });
-    } else {
-      isTracking = false;
-      clearInterval(intervalAutolocate);
-      geolocation.setTracking(false);
-      positionFeature.setGeometry(null);
-    }
-  });
+    // Enable map drag interaction
+    map.getInteractions().forEach(function (interaction) {
+      if (interaction instanceof ol.interaction.DragPan) {
+        interaction.setActive(true);
+      }
+    });
+  }
 });
+
+map.on("moveend", function (event) {
+  if (isTracking) {
+    // If tracking is active and the map is manually moved, stop tracking
+    isTracking = false;
+    clearInterval(intervalAutolocate);
+    geolocation.setTracking(false);
+    positionFeature.setGeometry(null);
+
+    // Enable map drag interaction
+    map.getInteractions().forEach(function (interaction) {
+      if (interaction instanceof ol.interaction.DragPan) {
+        interaction.setActive(true);
+      }
+    });
+
+    // Update button state
+    $("#livelocation").removeClass("clicked");
+  }
+});
+
 // ------------------LIVE LOCATION-------------------//
 
 // ----------------------COMPASS --------------------//
