@@ -198,15 +198,6 @@ $(function () {
       positionFeature.setGeometry(null);
     }
   });
-
-  // Handle updates for mobile devices
-  if ("ontouchstart" in window || navigator.maxTouchPoints) {
-    setInterval(function () {
-      if (isTracking) {
-        updateLiveLocation();
-      }
-    }, 10000);
-  }
 });
 // ------------------LIVE LOCATION-------------------//
 
