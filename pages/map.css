@@ -135,16 +135,6 @@
   content: "✖";
 }
 
-/* #bufferDistance {
-  width: 100px;
-}
-
-#distanceUnits {
-  width: 150px;
-  margin: 0px auto 0px 20px;
-  ;
-} */
-
 .overlay-title {
   position: absolute;
   top: 10px;
@@ -155,6 +145,7 @@
   border: 1px solid #ccc;
   border-radius: 5px;
 }
+
 /* MOUSE POSITION */
 .mousePosition {
   position: absolute;

@@ -1,9 +1,11 @@
-//------------------MAP INITIATION--------------------//
+// --------------VIEW INITIALIZATION----------------//
 var mapView = new ol.View({
   center: ol.proj.fromLonLat([7.442544, 10.542135]),
   zoom: 12,
 });
+// --------------VIEW INITIALIZATION----------------//
 
+// --------------MAP INITIALIZATION----------------//
 var map = new ol.Map({
   target: "map",
   view: mapView,
@@ -18,17 +20,17 @@ var map = new ol.Map({
     }),
 
     new ol.control.ScaleLine({
-      units: "metric",
-      bar: true,
-      steps: 4,
-      text: true,
-      minWidth: 100,
+      // units: "metric",
+      // bar: true,
+      // steps: 2,
+      // text: true,
+      // minWidth: 50,
     }),
 
     new ol.control.LayerSwitcher(),
   ],
 });
-//------------------MAP INITIATION--------------------//
+// --------------MAP INITIALIZATION----------------//
 
 //----------------------LAYERS-----------------------//
 // Bing Maps Satellite
@@ -159,7 +161,7 @@ function createGeoJSONLayer(geoJSONUrl, title, adminLevel) {
         }),
         stroke: new ol.style.Stroke({
           color: strokeColor,
-          width: 1,
+          width: 2,
         }),
       });
     },
@@ -293,56 +295,7 @@ map.on("moveend", function (event) {
 });
 //------------------LIVE LOCATION-------------------//
 
-//----------------------COMPASS --------------------//
-// Define an initial rotation value
-let initialRotation = 0;
-
-// Add a pointer interaction to handle rotation
-const rotateInteraction = new ol.interaction.Pointer({
-  handleDownEvent: function (event) {
-    // Start tracking the rotation on pointer down
-    this.rotationStart = map.getView().getRotation();
-    this.anchor = event.coordinate;
-    return true;
-  },
-  handleDragEvent: function (event) {
-    // Calculate the new rotation during drag
-    const dx = event.coordinate[0] - this.anchor[0];
-    const dy = event.coordinate[1] - this.anchor[1];
-    const deltaRotation = Math.atan2(dy, dx) - Math.atan2(0, 0);
-    const newRotation = this.rotationStart - deltaRotation;
-
-    // Set the new rotation to the view
-    map.getView().setRotation(newRotation);
-
-    return true;
-  },
-});
-
-// Update the rotation icon based on the map rotation
-map.on("postrender", function () {
-  const rotateIcon = document.getElementById("rotateIcon");
-  const rotation = map.getView().getRotation();
-  rotateIcon.style.transform = `rotate(${rotation}rad)`;
-});
-
-// Add click event listener to the rotate control
-const rotateControl = document.getElementById("rotateBtn");
-rotateControl.addEventListener("click", toggleRotation);
-
-// Toggle the rotation interaction
-function toggleRotation() {
-  if (map.getInteractions().getArray().includes(rotateInteraction)) {
-    // If rotation interaction is active, set the rotation back to its initial state
-    map.removeInteraction(rotateInteraction);
-    map.getView().setRotation(0); // Reset the rotation
-  } else {
-    // If rotation interaction is not active, store the current rotation as initial
-    initialRotation = map.getView().getRotation();
-    map.addInteraction(rotateInteraction);
-  }
-}
-
+//-------------------------POPUP-------------------//
 // Elements that make up the popup.
 const container = document.getElementById("popup");
 const content = document.getElementById("popup-content");
@@ -358,9 +311,7 @@ const overlay = new ol.Overlay({
     },
   },
 });
-//----------------------COMPASS -------------------//
 
-//-------------------------POPUP-------------------//
 // Add a click handler to hide the popup.
 closer.onclick = function () {
   overlay.setPosition(undefined);
@@ -584,6 +535,57 @@ function handleSuggestionClick(suggestion) {
 }
 //-----------------LOCATION SEARCH-----------------//
 
+//----------------------COMPASS --------------------//
+// Define an initial rotation value
+let initialRotation = 0;
+
+// Add a pointer interaction to handle rotation
+const rotateInteraction = new ol.interaction.Pointer({
+  handleDownEvent: function (event) {
+    // Start tracking the rotation on pointer down
+    this.rotationStart = map.getView().getRotation();
+    this.anchor = event.coordinate;
+    return true;
+  },
+  handleDragEvent: function (event) {
+    // Calculate the new rotation during drag
+    const dx = event.coordinate[0] - this.anchor[0];
+    const dy = event.coordinate[1] - this.anchor[1];
+    const deltaRotation = Math.atan2(dy, dx) - Math.atan2(0, 0);
+    const newRotation = this.rotationStart - deltaRotation;
+
+    // Set the new rotation to the view
+    map.getView().setRotation(newRotation);
+
+    return true;
+  },
+});
+
+// Update the rotation icon based on the map rotation
+map.on("postrender", function () {
+  const rotateIcon = document.getElementById("rotateIcon");
+  const rotation = map.getView().getRotation();
+  rotateIcon.style.transform = `rotate(${rotation}rad)`;
+});
+
+// Add click event listener to the rotate control
+const rotateControl = document.getElementById("rotateBtn");
+rotateControl.addEventListener("click", toggleRotation);
+
+// Toggle the rotation interaction
+function toggleRotation() {
+  if (map.getInteractions().getArray().includes(rotateInteraction)) {
+    // If rotation interaction is active, set the rotation back to its initial state
+    map.removeInteraction(rotateInteraction);
+    map.getView().setRotation(0); // Reset the rotation
+  } else {
+    // If rotation interaction is not active, store the current rotation as initial
+    initialRotation = map.getView().getRotation();
+    map.addInteraction(rotateInteraction);
+  }
+}
+//----------------------COMPASS -------------------//
+
 //----------------FULL SCREEN CONTOL--------------------//
 document.addEventListener("keydown", function (event) {
   if (event.key === "f" && (event.ctrlKey || event.metaKey)) {
@@ -617,8 +619,9 @@ function toggleFullscreen() {
     }
   }
 }
+//----------------FULL SCREEN CONTOL--------------------//
 
-// ZOOM-IN & OUT
+// ----------------ZOOM-IN & OUT------------------------//
 // Define zoom interactions
 var zoomInInteraction = new ol.interaction.DragBox();
 var zoomOutInteraction = new ol.interaction.DragBox();
@@ -656,7 +659,7 @@ function toggleZoomOutInteraction() {
   }
   zoomOutActive = !zoomOutActive;
 }
-//----------------FULL SCREEN CONTOL--------------------//
+// ----------------ZOOM-IN & OUT------------------------//
 
 //---POINT MARKER, DISTANCE AND AREA MEASUREMENTS---//
 document.getElementById("lengthBtn").addEventListener("click", function () {
