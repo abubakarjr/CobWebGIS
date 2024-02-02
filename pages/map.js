@@ -1,6 +1,6 @@
 // --------------VIEW INITIALIZATION----------------//
 var mapView = new ol.View({
-  center: ol.proj.fromLonLat([7.442544, 10.542135]),
+  center: ol.proj.fromLonLat([7.489064, 9.058505]),
   zoom: 12,
 });
 // --------------VIEW INITIALIZATION----------------//
@@ -208,15 +208,10 @@ var geolocation = new ol.Geolocation({
 var positionFeature = new ol.Feature();
 positionFeature.setStyle(
   new ol.style.Style({
-    image: new ol.style.Circle({
-      radius: 6,
-      fill: new ol.style.Fill({
-        color: "#3399CC",
-      }),
-      stroke: new ol.style.Stroke({
-        color: "#fff",
-        width: 2,
-      }),
+    image: new ol.style.Icon({
+      src: "/resources/images/marker.svg",
+      anchor: [0.5, 1],
+      scale: 0.03,
     }),
   })
 );
@@ -235,7 +230,7 @@ function updateLiveLocation() {
     coordinates ? new ol.geom.Point(coordinates) : null
   );
   map.getView().setCenter(coordinates);
-  // map.getView().setZoom(16);
+  map.getView().setZoom(18);
 }
 
 var isTracking = false;
