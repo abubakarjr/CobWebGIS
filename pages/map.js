@@ -20,11 +20,11 @@ var map = new ol.Map({
     }),
 
     new ol.control.ScaleLine({
-      // units: "metric",
-      // bar: true,
-      // steps: 2,
-      // text: true,
-      // minWidth: 50,
+      units: "metric",
+      bar: true,
+      steps: 2,
+      text: true,
+      minWidth: 50,
     }),
 
     new ol.control.LayerSwitcher(),
@@ -383,56 +383,62 @@ var bingApiKey =
   "AstqSWN2XWpS7yTd1GQ6mSp6ADE-IFOaLveo30y7PhE2iz7CDA8nvsvO-3YsEeXF";
 var mapboxApiKey =
   "pk.eyJ1IjoiYWJ1YmFrYXJ0YW5rbzk5IiwiYSI6ImNra3dyNXc5aTBuYTUybm80bHpxNXM5NDMifQ.CTLplUINQxXlKFLh_ow2sg";
-var googleApiKey = "YOUR_GOOGLE_API_KEY"; // Replace with your Google API key
 var locationInput = document.getElementById("inpt_search");
 var suggestionsContainer = document.getElementById("suggestions-container");
 
-locationInput.addEventListener("input", function () {
-  // Clear previous suggestions
-  suggestionsContainer.innerHTML = "";
+document.addEventListener("DOMContentLoaded", function () {
+  // Hide suggestions container on page load
+  suggestionsContainer.style.display = "none";
 
-  var locationInputValue = locationInput.value;
+  locationInput.addEventListener("input", function () {
+    // Clear previous suggestions
+    suggestionsContainer.innerHTML = "";
 
-  if (locationInputValue.trim() !== "") {
-    Promise.all([
-      getBingLocationsSuggestions(locationInputValue),
-      getMapboxLocationsSuggestions(locationInputValue),
-      getGoogleLocationsSuggestions(locationInputValue),
-    ])
-      .then(([bingSuggestions, mapboxSuggestions, googleSuggestions]) => {
-        var allSuggestions = bingSuggestions.concat(
-          mapboxSuggestions,
-          googleSuggestions
-        );
+    var locationInputValue = locationInput.value;
 
-        if (allSuggestions.length > 0) {
-          // Display up to 3 suggestions
-          allSuggestions.slice(0, 3).forEach((suggestion) => {
-            var suggestionElement = document.createElement("div");
-            suggestionElement.className = "suggestion";
-            suggestionElement.textContent = suggestion.name;
+    if (locationInputValue.trim() !== "") {
+      // Display suggestions container if there's input
+      suggestionsContainer.style.display = "block";
 
-            suggestionElement.addEventListener("click", function () {
-              // Handle suggestion click
-              handleSuggestionClick(suggestion);
+      Promise.all([
+        getBingLocationsSuggestions(locationInputValue),
+        getMapboxLocationsSuggestions(locationInputValue),
+      ])
+        .then(([bingSuggestions, mapboxSuggestions]) => {
+          var allSuggestions = bingSuggestions.concat(mapboxSuggestions);
+
+          if (allSuggestions.length > 0) {
+            // Display up to 3 suggestions
+            allSuggestions.slice(0, 3).forEach((suggestion) => {
+              var suggestionElement = document.createElement("div");
+              suggestionElement.className = "suggestion";
+              suggestionElement.textContent = suggestion.name;
+
+              suggestionElement.addEventListener("click", function () {
+                // Handle suggestion click
+                handleSuggestionClick(suggestion);
+              });
+
+              suggestionsContainer.appendChild(suggestionElement);
             });
 
-            suggestionsContainer.appendChild(suggestionElement);
-          });
-
-          // Show scroll styling if there are more than 3 suggestions
-          if (allSuggestions.length > 3) {
-            suggestionsContainer.style.overflowY = "scroll";
-            suggestionsContainer.style.maxHeight = "100px"; // Set a max height as per your design
-          } else {
-            suggestionsContainer.style.overflowY = "hidden";
+            // Show scroll styling if there are more than 3 suggestions
+            if (allSuggestions.length > 3) {
+              suggestionsContainer.style.overflowY = "scroll";
+              suggestionsContainer.style.maxHeight = "100px"; // Set a max height as per your design
+            } else {
+              suggestionsContainer.style.overflowY = "hidden";
+            }
           }
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching location suggestions:", error);
-      });
-  }
+        })
+        .catch((error) => {
+          console.error("Error fetching location suggestions:", error);
+        });
+    } else {
+      // Hide suggestions container if input is empty
+      suggestionsContainer.style.display = "none";
+    }
+  });
 });
 
 function getBingLocationsSuggestions(query) {
@@ -476,29 +482,6 @@ function getMapboxLocationsSuggestions(query) {
     })
     .catch((error) => {
       console.error("Error fetching Mapbox location suggestions:", error);
-      return [];
-    });
-}
-
-function getGoogleLocationsSuggestions(query) {
-  var apiUrl = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(
-    query
-  )}&key=${googleApiKey}`;
-
-  return fetch(apiUrl)
-    .then((response) => response.json())
-    .then((data) => {
-      if (data && data.predictions && data.predictions.length > 0) {
-        return data.predictions.map((prediction) => ({
-          name: prediction.description,
-          placeId: prediction.place_id,
-        }));
-      } else {
-        return [];
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching Google location suggestions:", error);
       return [];
     });
 }
