@@ -173,7 +173,7 @@
   width: 220px;
   border-radius: 5px;
   box-sizing: border-box;
-  border: 2px solid rgb(18, 1, 1);
+  border: 2px solid #330c43;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-radius: 5px;

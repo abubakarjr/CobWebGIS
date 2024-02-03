@@ -1,3 +1,9 @@
+/* Specify primary font */
+@font-face {
+  font-family: 'Unicons';
+  src: url('https://unicons.iconscout.com/release/v4.0.0/fonts/line/unicons-7.woff2') format('woff2');
+}
+
 *::-webkit-scrollbar {
     box-sizing: border-box;
     margin: 0;
@@ -6,6 +12,7 @@
   *::-webkit-scrollbar {
    scrollbar-width: none;
   }
+
   
   /* Body styles */
   body {
