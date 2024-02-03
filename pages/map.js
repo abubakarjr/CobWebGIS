@@ -28,6 +28,7 @@ var map = new ol.Map({
     }),
 
     new ol.control.LayerSwitcher(),
+    new ol.control.ZoomSlider(),
   ],
 });
 // --------------MAP INITIALIZATION----------------//
