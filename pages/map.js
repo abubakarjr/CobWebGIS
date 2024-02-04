@@ -105,22 +105,22 @@ var googleHybridLayer = new ol.layer.Tile({
   }),
 });
 
-// Create a noTile layer with an empty source
-var noTileLayer = new ol.layer.Tile({
-  title: "NoLayer",
-  type: "base",
-  visible: false, // Set to true if you want it to be initially visible
-  source: new ol.source.TileWMS({
-    url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
-    // This is a transparent 1x1 pixel GIF, acting as an empty source
-  }),
-});
+// // Create a noTile layer with an empty source
+// var noTileLayer = new ol.layer.Tile({
+//   title: "NoLayer",
+//   type: "base",
+//   visible: false, // Set to true if you want it to be initially visible
+//   source: new ol.source.TileWMS({
+//     url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
+//     // This is a transparent 1x1 pixel GIF, acting as an empty source
+//   }),
+// });
 
 var baseGroup = new ol.layer.Group({
   title: "Base Maps",
   fold: true,
   layers: [
-    noTileLayer,
+    // noTileLayer,
     osmTile,
     mapboxTile,
     bingStreetsWithLabels,
