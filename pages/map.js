@@ -107,7 +107,7 @@ var googleHybridLayer = new ol.layer.Tile({
 
 // Create a noTile layer with an empty source
 var noTileLayer = new ol.layer.Tile({
-  title: "Empty Map",
+  title: "NoLayer",
   type: "base",
   visible: false, // Set to true if you want it to be initially visible
   source: new ol.source.TileWMS({
