@@ -544,6 +544,48 @@
     background-color: #5e1aaf;
   }
   
+/* PRINT AREA */
+.printwrapper {
+  border-radius: 5px;
+  border: solid 3px #201344;
+  width: 210mm; /* A4 width */
+  height: 251mm; /* A4 height */
+  margin: 0 auto; /* Center the content horizontally */
+  box-sizing: border-box; /* Include border in total width/height */
+}
+
+.printarea {
+  text-align: justify;
+  height: 213mm; /* Adjusted to fit within a single A4 page */
+  padding: 0;
+  margin: 1px;
+  border: solid 3px #201344;
+  border-radius: 5px;
+}
+
+.printheader,
+.printfooter {
+  padding: 0;
+  margin: 1px;
+  border: solid 3px #201344;
+  height: 10vh;
+  border-radius: 5px;
+}
+
+/* @media rule for print styles */
+@media print {
+  body {
+    margin: 0; /* Reset default margin */
+  }
+
+  .printwrapper {
+    width: 100%; /* Full width for printing */
+    height: 100%; /* Full height for printing */
+    page-break-before: always; /* Ensure a new page for each printwrapper */
+  }
+}
+/* PRINT AREA */
+
   /* Responsive adjustments */
   @media screen and (max-width: 800px) {
     .contact-info,

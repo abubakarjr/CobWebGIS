@@ -62,6 +62,25 @@ function toggleEdgePanels() {
   }, 300); // Adjust the timeout as needed
 }
 
+// script.js
+function adjustPrintLayout() {
+  const printWrapper = document.querySelector(".printwrapper");
+
+  if (window.matchMedia("(orientation: landscape)").matches) {
+    // Landscape orientation
+    printWrapper.style.width = "251mm"; /* A4 height */
+    printWrapper.style.height = "210mm"; /* A4 width */
+  } else {
+    // Portrait orientation
+    printWrapper.style.width = "210mm"; /* A4 width */
+    printWrapper.style.height = "251mm"; /* A4 height */
+  }
+}
+
+// Call the function on page load and orientation change
+window.addEventListener("load", adjustPrintLayout);
+window.addEventListener("orientationchange", adjustPrintLayout);
+
 // // Check if the user is authenticated (has signed up or logged in)
 // function isAuthenticated() {
 //   // Check if the user is signed up or logged in (you can modify this logic based on your authentication mechanism)
