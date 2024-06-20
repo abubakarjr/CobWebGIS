@@ -2,28 +2,32 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>CobWeb GIS</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>The Cobweb GIS</title>
+    <link rel="stylesheet" href="/pages/map.css" />
+    <link rel="stylesheet" href="/style.css" />
     <link
       rel="shortcut icon"
       href="/resources/images/cobweb-svgrepo-com (1).svg"
     />
-    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/resources/v6.8.0-dist/ol.css" />
+    <link
+      rel="stylesheet"
+      href="/resources/layerswitcher/ol-layerswitcher.css"
+    />
     <link
       rel="stylesheet"
       href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
     />
-    <link
+    <!-- <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-    />
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <meta
-      name="google-signin-client_id"
-      content="1069144074365-t2m6orjga7vqirk3n1lmlvbmmcm3b4h4.apps.googleusercontent.com"
-    />
+    /> -->
   </head>
+
   <body>
     <div class="wrapper">
       <!-- Header -->
@@ -48,153 +52,156 @@
       </header>
 
       <!-- Main Page -->
-      <main class="main">
-        <section class="hero-section scrollable-container">
-          <div class="hero">
-            <h1>Measure Your Land and Property Online - Easy and Accurate!</h1>
-            <p>
-              Tired of inaccurate and time-consuming land measurement methods?
-              <br /><br />
-              Say goodbye to the days of pacing and guesswork!
-              <br /><br />
-              With our innovative web mapping application, you can now measure
-              your land and property accurately and conveniently from your
-              computer or mobile device.
-            </p>
-            <div class="buttons">
-              <a href="/pages/map.html" class="join">Join Now</a>
-              <a href="/pages/about.html" class="learn">Learn More</a>
+      <main class="main map">
+        <div id="map" class="map">
+
+          <!-- Live Location -->
+          <button id="livelocation" title="Live Location">
+            <img class="livelocation" src="/resources/images/crosshairs.svg" alt="">
+          </button>
+          
+          <!-- Popup -->
+          <div id="popup" class="ol-popup">
+            <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+            <div id="popup-content"></div>
+          </div>
+          
+          <!-- Compass -->
+          <div id="rotateBtn" class="rotate-control ol-unselectable ol-control">
+            <img title="Compass" id="rotateIcon" src="/resources/images/compass.svg" alt="Rotate" />
+          </div>
+
+          <!-- Location Search -->
+          <div>
+            <label class="search">
+              <input id="inpt_search" type="text" />
+              <div id="suggestions-container"></div>
+            </label>
+          </div>
+
+          <!-- Measurement Controls -->
+          <div id="measurement-controls" class="measurement-controls">
+            <div id="type">
+              <button
+                title="Add Marker"
+                type="button"
+                id="pointBtn"
+                data-type="Point"
+              >
+                <img src="/resources/images/marker.svg" alt="" />
+              </button>
+              <button
+                title="Distance Measure"
+                type="button"
+                id="lengthBtn"
+                data-type="LineString"
+              >
+                <img src="/resources/images/length.svg" alt="" />
+              </button>
+              <button
+                title="Area Measure"
+                type="button"
+                id="areaBtn"
+                data-type="Polygon"
+              >
+                <img src="/resources/images/area.svg" alt="" />
+              </button>
+              <button title="Clear Measurement" type="button" id="clearBtn">
+                <img src="/resources/images/clear1.svg" alt="" />
+              </button>
+              <button title="Info" id="popup-toggle-btn" onclick="togglePopup()">               
+                <img src="/resources/images/info-svgrepo-com.svg" alt="" />
+                <title></title>
+              </button>
+              <!-- <button
+                title="Save Features"
+                type="button"
+                id="saveFeaturesBtn"
+                onclick="saveFeatures()"
+              >
+                <img src="/resources/images/save.svg" alt="" />
+              </button>
+              <button
+                title="Load Features"
+                type="button"
+                id="loadFeaturesBtn"
+                onclick="loadFeatures()"
+              >
+                <img src="/resources/images/load.svg" alt="" /> -->
+              </button>
+              <button
+                title="Edge Panels"
+                class="edge-panel-toggle"
+                onclick="toggleEdgePanels()"
+              >
+                <img
+                  src="/resources/images/side.svg"
+                  alt=""
+                />
+              </button>
+              <button id="fullscreenBtn" onclick="toggleFullscreen()" title="Toggle Fullscreen">
+                <img src="/resources/images/fullscreen.svg" alt="" />
+              </button>
+              <button
+              title="Zoom In"
+              id="zoomInBtn"
+              class="myButton"
+              onclick="toggleZoomInInteraction()"
+            >
+              <img src="/resources/images/zoom_in.svg" alt="" />
+            </button>
+        
+            <button
+              title="Zoom Out"
+              id="zoomOutBtn"
+              class="myButton"
+              onclick="toggleZoomOutInteraction()"
+            >
+              <img src="/resources/images/zoom_out.svg" alt="" />
+            </button>
             </div>
           </div>
-        </section>
-
-        <!-- Home -->
-        <section class="home">
-          <div class="form_container">
-            <i class="uil uil-times form_close"></i>
-
-            <!-- Login Form -->
-            <div class="form login_form">
-              <form action="#">
-                <h2>Login</h2>
-
-                <div class="input_box">
-                  <input type="email" placeholder="Enter your email" required />
-                  <i class="uil uil-envelope-alt email"></i>
-                </div>
-                <div class="input_box">
-                  <input
-                    type="password"
-                    placeholder="Enter your password"
-                    required
-                  />
-                  <i class="uil uil-lock password"></i>
-                  <i class="uil uil-eye-slash pw_hide"></i>
-                </div>
-
-                <div class="option_field">
-                  <span class="checkbox">
-                    <input type="checkbox" id="check" />
-                    <label for="check">Remember me</label>
-                  </span>
-                  <a href="#" class="forgot_pw">Forgot password?</a>
-                </div>
-
-                <button class="button">Login Now</button>
-
-                <div class="login_signup">
-                  Don't have an account? <a href="#" id="signup">Signup</a>
-                </div>
-              </form>
-
-              <!-- Google Sign-In Button -->
-              <div
-                id="g_id_onload"
-                data-client_id="1069144074365-t2m6orjga7vqirk3n1lmlvbmmcm3b4h4.apps.googleusercontent.com"
-                data-login_uri="https://www.cobwebgis.com.ng/pages/map.html"
-                data-auto_prompt="false"
-              ></div>
-              <div
-                class="g_id_signin"
-                data-type="standard"
-                data-shape="rectangular"
-                data-theme="outline"
-                data-text="sign_in_with"
-                data-size="large"
-              ></div>
-            </div>
-
-            <!-- Signup Form -->
-            <div class="form signup_form">
-              <form action="#">
-                <h2>Signup</h2>
-
-                <!-- New Fields -->
-                <div class="input_box">
-                  <input type="text" placeholder="Full Name" required />
-                  <i class="uil uil-user-circle email"></i>
-                </div>
-
-                <div class="input_box">
-                  <select name="gender" id="gender" required>
-                    <option value="" disabled selected>Select Gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                  </select>
-                  <i class="uil uil-venus-mars email"></i>
-                </div>
-
-                <div class="input_box">
-                  <input type="email" placeholder="Enter your email" required />
-                  <i class="uil uil-envelope-alt email"></i>
-                </div>
-
-                <div class="input_box">
-                  <input
-                    type="password"
-                    placeholder="Create password"
-                    required
-                  />
-                  <i class="uil uil-lock password"></i>
-                  <i class="uil uil-eye-slash pw_hide"></i>
-                </div>
-
-                <div class="input_box">
-                  <input
-                    type="password"
-                    placeholder="Confirm password"
-                    required
-                  />
-                  <i class="uil uil-lock password"></i>
-                  <i class="uil uil-eye-slash pw_hide"></i>
-                </div>
-
-                <button class="button">Signup Now</button>
-
-                <div class="login_signup">
-                  Already have an account? <a href="#" id="login">Login</a>
-                </div>
-              </form>
-
-              <!-- Google Sign-In Button -->
-              <div
-                id="g_id_onload"
-                data-client_id="1069144074365-t2m6orjga7vqirk3n1lmlvbmmcm3b4h4.apps.googleusercontent.com"
-                data-login_uri="https://www.cobwebgis.com.ng/pages/map.html"
-                data-auto_prompt="false"
-              ></div>
-              <div
-                class="g_id_signin"
-                data-type="standard"
-                data-shape="rectangular"
-                data-theme="outline"
-                data-text="sign_in_with"
-                data-size="large"
-              ></div>
-            </div>
-          </div>
-        </section>
+        </div>
       </main>
+      <!-- Main Page -->
+
+      <!-- Aside 1 -->
+      <aside class="aside aside1 hidden">
+        <div class="coodctn">
+          <h1>Coordinates Calc</h1>
+          <div id="coordinates">
+            <textarea
+              id="coordinateInput"
+              rows="5"
+              placeholder="Latitude1, Longitude1&#10;Latitude2, Longitude2&#10;Latitude3, Longitude3"
+            ></textarea>
+          </div>
+          <p id="result1"></p>
+      </aside>
+
+      <!-- Aside 2 -->
+      <aside class="aside aside2 hidden">
+        <div id="conversion-form">
+          <h1 class="survres">Result</h1>
+          <div id="measurementResults">
+            <p id="lengthResult"></p>
+            <p id="areaResult"></p>
+          </div>
+        
+          <!-- AUTO CONVERTER -->
+          <div class="input-container">
+            <input type="number" id="area" placeholder="Enter area (sqm)" />
+          </div>
+          <br />
+          <select id="dense">
+            <option value="hidens">Selece Plot Density</option>
+            <option value="hidens">High Density Area</option>
+            <option value="medens">Medium Density Area</option>
+            <option value="lodens">Low Density Area</option>
+          </select>
+            <div id="result"></div>
+          </div>
+      </aside>
 
       <!-- Footer -->
       <footer class="footer">
@@ -203,7 +210,11 @@
     </div>
 
     <!-- JavaScript -->
+    <script src="/resources/jQuery/jquery-3.6.0.min.js"></script>
+    <script src="/resources/v6.8.0-dist/ol.js"></script>
+    <script src="/resources/layerswitcher/ol-layerswitcher.js"></script>
+    <!-- <script src="/resources/fontawsome/js/all.js"></script> -->
     <script src="/script.js"></script>
-    <script src="/google-signin.js"></script>
+    <script src="/pages/map.js"></script>
   </body>
 </html>
