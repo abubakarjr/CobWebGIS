@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>CobWeb GIS</title>
     <link
-      rel="shortcut icon "
+      rel="shortcut icon"
       href="/resources/images/cobweb-svgrepo-com (1).svg"
     />
     <link rel="stylesheet" href="/style.css" />
@@ -29,10 +29,9 @@
             <img
               class="img-logo"
               src="/resources/images/cobweb-svgrepo-com (3).png"
-              alt="Hompage"
+              alt="Homepage"
             />
           </a>
-          <!-- <a href="/layout/home.html" class="logo">CobWeb GIS</a> -->
           <ul class="nav-links">
             <i class="uil uil-times navCloseBtn"></i>
             <li><a href="/pages/map.html">Map</a></li>
@@ -69,88 +68,106 @@
           <div class="form_container">
             <i class="uil uil-times form_close"></i>
 
-            <!-- Login From -->
+            <!-- Login Form -->
             <div class="form login_form">
               <form action="#">
                 <h2>Login</h2>
-
                 <div class="input_box">
-                  <input type="email" placeholder="Enter your email" required />
+                  <label for="login-email" class="sr-only">Email</label>
+                  <input
+                    type="email"
+                    id="login-email"
+                    placeholder="Enter your email"
+                    required
+                  />
                   <i class="uil uil-envelope-alt email"></i>
                 </div>
                 <div class="input_box">
+                  <label for="login-password" class="sr-only">Password</label>
                   <input
                     type="password"
+                    id="login-password"
                     placeholder="Enter your password"
                     required
                   />
                   <i class="uil uil-lock password"></i>
                   <i class="uil uil-eye-slash pw_hide"></i>
                 </div>
-
                 <div class="option_field">
                   <span class="checkbox">
-                    <input type="checkbox" id="check" />
-                    <label for="check">Remember me</label>
+                    <input type="checkbox" id="remember-me" />
+                    <label for="remember-me">Remember me</label>
                   </span>
                   <a href="#" class="forgot_pw">Forgot password?</a>
                 </div>
-
                 <button class="button">Login Now</button>
-
                 <div class="login_signup">
                   Don't have an account? <a href="#" id="signup">Signup</a>
                 </div>
               </form>
             </div>
 
-            <!-- Signup From -->
+            <!-- Signup Form -->
             <div class="form signup_form">
               <form action="#">
                 <h2>Signup</h2>
-
                 <!-- New Fields -->
                 <div class="input_box">
-                  <input type="text" placeholder="Full Name" required />
+                  <label for="signup-name" class="sr-only">Full Name</label>
+                  <input
+                    type="text"
+                    id="signup-name"
+                    placeholder="Full Name"
+                    required
+                  />
                   <i class="uil uil-user-circle email"></i>
                 </div>
-
                 <div class="input_box">
-                  <select name="gender" id="gender" required>
+                  <label for="signup-gender" class="sr-only">Gender</label>
+                  <select name="gender" id="signup-gender" required>
                     <option value="" disabled selected>Select Gender</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                   </select>
                   <i class="uil uil-venus-mars email"></i>
                 </div>
-
                 <div class="input_box">
-                  <input type="email" placeholder="Enter your email" required />
+                  <label for="signup-email" class="sr-only">Email</label>
+                  <input
+                    type="email"
+                    id="signup-email"
+                    placeholder="Enter your email"
+                    required
+                  />
                   <i class="uil uil-envelope-alt email"></i>
                 </div>
-
                 <div class="input_box">
+                  <label for="signup-password" class="sr-only"
+                    >Create Password</label
+                  >
                   <input
                     type="password"
+                    id="signup-password"
                     placeholder="Create password"
                     required
                   />
                   <i class="uil uil-lock password"></i>
                   <i class="uil uil-eye-slash pw_hide"></i>
                 </div>
-
                 <div class="input_box">
+                  <label for="confirm-password" class="sr-only"
+                    >Confirm Password</label
+                  >
                   <input
                     type="password"
+                    id="confirm-password"
                     placeholder="Confirm password"
                     required
                   />
                   <i class="uil uil-lock password"></i>
                   <i class="uil uil-eye-slash pw_hide"></i>
                 </div>
-
                 <button class="button">Signup Now</button>
-
                 <div class="login_signup">
                   Already have an account? <a href="#" id="login">Login</a>
                 </div>
