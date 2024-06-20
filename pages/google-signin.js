@@ -32,6 +32,7 @@ window.onload = function () {
     client_id:
       "1069144074365-t2m6orjga7vqirk3n1lmlvbmmcm3b4h4.apps.googleusercontent.com",
     callback: handleCredentialResponse,
+    ux_mode: "popup",
   });
   google.accounts.id.renderButton(
     document.querySelector(".g_id_signin"),
