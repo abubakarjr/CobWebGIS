@@ -7,22 +7,9 @@ function handleCredentialResponse(response) {
   console.log("Image URL: " + responsePayload.picture);
   console.log("Email: " + responsePayload.email);
 
-  // Send the ID token to your backend for verification and user session creation
-  fetch("/oauth2callback", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ token: response.credential }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      // Handle the response from the server
-      console.log(data);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+  // Store user information or perform any other required actions
+  // Example: Redirect to a protected page
+  window.location.href = "/pages/map.html";
 }
 
 function parseJwt(token) {
