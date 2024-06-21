@@ -116,7 +116,7 @@
 
   .main {
     text-align: justify;
-    height: 77vh;
+    height: 77.5vh;
     padding: 0;
     margin: 1px;
     border: solid 3px #201344;
@@ -196,7 +196,6 @@
     /* margin-top: 40px; */
     margin-bottom: 20px;
     padding: 10px;
-  
   }
   
   .hero-section .buttons a {
