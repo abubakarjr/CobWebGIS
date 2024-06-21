@@ -32,49 +32,47 @@
     <div class="wrapper">
       <!-- Header -->
       <header class="header">
-        <nav class="nav">
-          <i class="uil uil-bars navOpenBtn"></i>
+        <nav class="nav" role="navigation" aria-label="Main Navigation">
+          <i class="uil uil-bars navOpenBtn" aria-label="Open Navigation"></i>
           <a href="/index.html">
             <img
               class="img-logo"
               src="/resources/images/cobweb-svgrepo-com (3).png"
-              alt="Hompage"
+              alt="Homepage"
             />
           </a>
           <ul class="nav-links">
-            <i class="uil uil-times navCloseBtn"></i>
+            <i class="uil uil-times navCloseBtn" aria-label="Close Navigation"></i>
             <li><a href="/pages/map.html">Map</a></li>
             <li><a href="/pages/about.html">About</a></li>
             <li><a href="/pages/contact.html">Contact</a></li>
           </ul>
-          <button class="button" id="form-open">Account</button>
         </nav>
       </header>
 
       <!-- Main Page -->
       <main class="main map">
         <div id="map" class="map">
-
           <!-- Live Location -->
-          <button id="livelocation" title="Live Location">
-            <img class="livelocation" src="/resources/images/crosshairs.svg" alt="">
+          <button id="livelocation" title="Live Location" aria-label="Live Location">
+            <img class="livelocation" src="/resources/images/crosshairs.svg" alt="Live Location" />
           </button>
-          
+
           <!-- Popup -->
-          <div id="popup" class="ol-popup">
-            <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+          <div id="popup" class="ol-popup" role="dialog" aria-labelledby="popup-content">
+            <a href="#" id="popup-closer" class="ol-popup-closer" aria-label="Close Popup"></a>
             <div id="popup-content"></div>
           </div>
-          
+
           <!-- Compass -->
           <div id="rotateBtn" class="rotate-control ol-unselectable ol-control">
-            <img title="Compass" id="rotateIcon" src="/resources/images/compass.svg" alt="Rotate" />
+            <img title="Compass" id="rotateIcon" src="/resources/images/compass.svg" alt="Compass for map orientation" />
           </div>
 
           <!-- Location Search -->
           <div>
             <label class="search">
-              <input id="inpt_search" type="text" />
+              <input id="inpt_search" type="text" aria-label="Location Search" />
               <div id="suggestions-container"></div>
             </label>
           </div>
@@ -87,31 +85,38 @@
                 type="button"
                 id="pointBtn"
                 data-type="Point"
+                aria-label="Add Marker"
               >
-                <img src="/resources/images/marker.svg" alt="" />
+                <img src="/resources/images/marker.svg" alt="Add Marker" />
               </button>
               <button
                 title="Distance Measure"
                 type="button"
                 id="lengthBtn"
                 data-type="LineString"
+                aria-label="Distance Measure"
               >
-                <img src="/resources/images/length.svg" alt="" />
+                <img src="/resources/images/length.svg" alt="Distance Measure" />
               </button>
               <button
                 title="Area Measure"
                 type="button"
                 id="areaBtn"
                 data-type="Polygon"
+                aria-label="Area Measure"
               >
-                <img src="/resources/images/area.svg" alt="" />
+                <img src="/resources/images/area.svg" alt="Area Measure" />
               </button>
-              <button title="Clear Measurement" type="button" id="clearBtn">
-                <img src="/resources/images/clear1.svg" alt="" />
+              <button
+                title="Clear Measurement"
+                type="button"
+                id="clearBtn"
+                aria-label="Clear Measurement"
+              >
+                <img src="/resources/images/clear1.svg" alt="Clear Measurement" />
               </button>
-              <button title="Info" id="popup-toggle-btn" onclick="togglePopup()">               
-                <img src="/resources/images/info-svgrepo-com.svg" alt="" />
-                <title></title>
+              <button title="Info" id="popup-toggle-btn" onclick="togglePopup()" aria-label="Info">
+                <img src="/resources/images/info-svgrepo-com.svg" alt="Info" />
               </button>
               <!-- <button
                 title="Save Features"
@@ -119,7 +124,7 @@
                 id="saveFeaturesBtn"
                 onclick="saveFeatures()"
               >
-                <img src="/resources/images/save.svg" alt="" />
+                <img src="/resources/images/save.svg" alt="Save Features" />
               </button>
               <button
                 title="Load Features"
@@ -127,38 +132,41 @@
                 id="loadFeaturesBtn"
                 onclick="loadFeatures()"
               >
-                <img src="/resources/images/load.svg" alt="" /> -->
+                <img src="/resources/images/load.svg" alt="Load Features" /> -->
               </button>
               <button
                 title="Edge Panels"
                 class="edge-panel-toggle"
                 onclick="toggleEdgePanels()"
+                aria-label="Toggle Edge Panels"
               >
-                <img
-                  src="/resources/images/side.svg"
-                  alt=""
-                />
+                <img src="/resources/images/side.svg" alt="Toggle Edge Panels" />
               </button>
-              <button id="fullscreenBtn" onclick="toggleFullscreen()" title="Toggle Fullscreen">
-                <img src="/resources/images/fullscreen.svg" alt="" />
+              <button id="fullscreenBtn" onclick="toggleFullscreen()" title="Toggle Fullscreen" aria-label="Toggle Fullscreen">
+                <img src="/resources/images/fullscreen.svg" alt="Toggle Fullscreen" />
               </button>
               <button
-              title="Zoom In"
-              id="zoomInBtn"
-              class="myButton"
-              onclick="toggleZoomInInteraction()"
-            >
-              <img src="/resources/images/zoom_in.svg" alt="" />
-            </button>
-        
-            <button
-              title="Zoom Out"
-              id="zoomOutBtn"
-              class="myButton"
-              onclick="toggleZoomOutInteraction()"
-            >
-              <img src="/resources/images/zoom_out.svg" alt="" />
-            </button>
+                title="Zoom In"
+                id="zoomInBtn"
+                class="myButton"
+                onclick="toggleZoomInInteraction()"
+                aria-label="Zoom In"
+              >
+                <img src="/resources/images/zoom_in.svg" alt="Zoom In" />
+              </button>
+
+              <button
+                title="Zoom Out"
+                id="zoomOutBtn"
+                class="myButton"
+                onclick="toggleZoomOutInteraction()"
+                aria-label="Zoom Out"
+              >
+                <img src="/resources/images/zoom_out.svg" alt="Zoom Out" />
+              </button>
+              <button onclick="saveFeatures()">Save</button>
+              <button onclick="loadFeatures()">Load</button>
+              <button onclick="clearSavedFeatures()">Clear</button>
             </div>
           </div>
         </div>
@@ -174,9 +182,11 @@
               id="coordinateInput"
               rows="5"
               placeholder="Latitude1, Longitude1&#10;Latitude2, Longitude2&#10;Latitude3, Longitude3"
+              aria-label="Coordinates Input"
             ></textarea>
           </div>
           <p id="result1"></p>
+        </div>
       </aside>
 
       <!-- Aside 2 -->
@@ -187,20 +197,20 @@
             <p id="lengthResult"></p>
             <p id="areaResult"></p>
           </div>
-        
+
           <!-- AUTO CONVERTER -->
           <div class="input-container">
-            <input type="number" id="area" placeholder="Enter area (sqm)" />
+            <input type="number" id="area" placeholder="Enter area (sqm)" aria-label="Area Input" />
           </div>
           <br />
-          <select id="dense">
-            <option value="hidens">Selece Plot Density</option>
+          <select id="dense" aria-label="Plot Density">
+            <option value="hidens">Select Plot Density</option>
             <option value="hidens">High Density Area</option>
             <option value="medens">Medium Density Area</option>
             <option value="lodens">Low Density Area</option>
           </select>
-            <div id="result"></div>
-          </div>
+          <div id="result"></div>
+        </div>
       </aside>
 
       <!-- Footer -->

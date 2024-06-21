@@ -1240,3 +1240,58 @@ function calculateAreaValue(polygon) {
   return area;
 }
 //-------------COORDINATE CALCULATOR-------------------//
+
+// Function to save features to local storage
+function saveFeatures() {
+  const features = source.getFeatures();
+  const serializedFeatures = features.map((feature) => {
+    const geometry = feature.getGeometry();
+    const type = geometry.getType();
+    let serializedGeometry;
+
+    if (type === "Point") {
+      serializedGeometry = geometry.getCoordinates();
+    } else if (type === "LineString" || type === "Polygon") {
+      serializedGeometry = geometry.getCoordinates();
+    }
+
+    return {
+      type,
+      geometry: serializedGeometry,
+      measurement:
+        type === "LineString" ? formatLength(geometry) : formatArea(geometry),
+    };
+  });
+
+  localStorage.setItem("savedFeatures", JSON.stringify(serializedFeatures));
+}
+
+// Function to load features from local storage and display them on the map
+function loadFeatures() {
+  const savedFeatures = localStorage.getItem("savedFeatures");
+
+  if (savedFeatures) {
+    const parsedFeatures = JSON.parse(savedFeatures);
+
+    parsedFeatures.forEach((feature) => {
+      let geometry;
+
+      if (feature.type === "Point") {
+        geometry = new ol.geom.Point(feature.geometry);
+      } else if (feature.type === "LineString") {
+        geometry = new ol.geom.LineString(feature.geometry);
+      } else if (feature.type === "Polygon") {
+        geometry = new ol.geom.Polygon(feature.geometry);
+      }
+
+      const newFeature = new ol.Feature(geometry);
+      source.addFeature(newFeature);
+    });
+  }
+}
+// Function to clear saved features from local storage
+function clearSavedFeatures() {
+  localStorage.removeItem("savedFeatures");
+  // Optionally, clear features from the map as well
+  source.clear();
+}

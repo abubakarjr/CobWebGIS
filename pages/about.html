@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Cobweb GIS - About Us</title>
     <link
-      rel="shortcut icon "
+      rel="shortcut icon"
       href="/resources/images/cobweb-svgrepo-com (1).svg"
     />
     <link rel="stylesheet" href="/style.css" />
@@ -24,23 +24,24 @@
     <div class="wrapper">
       <!-- Header -->
       <header class="header">
-        <nav class="nav">
-          <i class="uil uil-bars navOpenBtn"></i>
+        <nav class="nav" role="navigation" aria-label="Main Navigation">
+          <i class="uil uil-bars navOpenBtn" aria-label="Open Navigation"></i>
           <a href="/index.html">
             <img
               class="img-logo"
               src="/resources/images/cobweb-svgrepo-com (3).png"
-              alt="Hompage"
+              alt="Homepage"
             />
           </a>
-          <!-- <a href="/layout/home.html" class="logo">CobWeb GIS</a> -->
           <ul class="nav-links">
-            <i class="uil uil-times navCloseBtn"></i>
+            <i
+              class="uil uil-times navCloseBtn"
+              aria-label="Close Navigation"
+            ></i>
             <li><a href="/pages/map.html">Map</a></li>
             <li><a href="/pages/about.html">About</a></li>
             <li><a href="/pages/contact.html">Contact</a></li>
           </ul>
-          <button class="button" id="form-open">Account</button>
         </nav>
       </header>
 
@@ -73,7 +74,10 @@
 
       <!-- Footer -->
       <footer class="footer">
-        <p>©CobWeb GIS 2023 info@cobwebgis.com</p>
+        <p>
+          © CobWeb GIS 2023
+          <a href="mailto:info@cobwebgis.com">info@cobwebgis.com</a>
+        </p>
       </footer>
     </div>
 

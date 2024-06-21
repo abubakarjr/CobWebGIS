@@ -18,32 +18,30 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
     />
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <meta
-      name="google-signin-client_id"
-      content="1069144074365-t2m6orjga7vqirk3n1lmlvbmmcm3b4h4.apps.googleusercontent.com"
-    />
   </head>
   <body>
     <div class="wrapper">
       <!-- Header -->
       <header class="header">
-        <nav class="nav">
-          <i class="uil uil-bars navOpenBtn"></i>
+        <nav class="nav" role="navigation" aria-label="Main Navigation">
+          <button class="navOpenBtn" aria-label="Open Navigation">
+            <i class="uil uil-bars"></i>
+          </button>
           <a href="/index.html">
             <img
               class="img-logo"
               src="/resources/images/cobweb-svgrepo-com (3).png"
-              alt="Hompage"
+              alt="Homepage"
             />
           </a>
           <ul class="nav-links">
-            <i class="uil uil-times navCloseBtn"></i>
+            <button class="navCloseBtn" aria-label="Close Navigation">
+              <i class="uil uil-times"></i>
+            </button>
             <li><a href="/pages/map.html">Map</a></li>
             <li><a href="/pages/about.html">About</a></li>
             <li><a href="/pages/contact.html">Contact</a></li>
           </ul>
-          <button class="button" id="form-open">Account</button>
         </nav>
       </header>
 
@@ -67,41 +65,19 @@
             </div>
           </div>
         </section>
-
-        <!-- Home -->
-        <section class="home">
-          <div class="form_container">
-            <i class="uil uil-times form_close"></i>
-
-            <!-- Google Sign-In Button -->
-            <div
-              id="g_id_onload"
-              data-client_id="1069144074365-t2m6orjga7vqirk3n1lmlvbmmcm3b4h4.apps.googleusercontent.com"
-              data-context="signin"
-              data-ux_mode="popup"
-              data-login_uri="https://www.cobwebgis.com.ng/pages/map.html"
-              data-auto_prompt="false"
-            ></div>
-            <div
-              class="g_id_signin"
-              data-type="standard"
-              data-shape="rectangular"
-              data-theme="outline"
-              data-text="sign_in_with"
-              data-size="large"
-            ></div>
-          </div>
-        </section>
       </main>
 
       <!-- Footer -->
       <footer class="footer">
-        <p>© CobWeb GIS 2023 info@cobwebgis.com +234 8038 098 851</p>
+        <p>
+          © CobWeb GIS 2023
+          <a href="mailto:info@cobwebgis.com">info@cobwebgis.com</a>
+          <a href="tel:+2348038098851">+234 8038 098 851</a>
+        </p>
       </footer>
     </div>
 
     <!-- JavaScript -->
     <script src="/script.js"></script>
-    <script src="/google-signin.js"></script>
   </body>
 </html>
